@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div style="min-height: 75vh; text-align: center" class="jumbotron">
+    @if (Request.IsAuthenticated)
+    {
+        <h1>Welcome</h1>
+        <h3>You are logged in</h3>
+    }
+    else
+    {
+        <h1>Welcome</h1>
+        <h3>please login</h3>
+
+        <a href=@Url.Action("Login", "Account") class="btn btn-primary">Login</a>
+    }
+</div>
