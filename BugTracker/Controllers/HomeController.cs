@@ -13,7 +13,8 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
-            return View();
+            var model = new ProjectandUsers { Projects = db.Projects, Users = db.Users };
+            return View(model);
         }
 
         public ActionResult About()

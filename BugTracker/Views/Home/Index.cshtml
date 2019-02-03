@@ -1,18 +1,42 @@
-﻿@{
+﻿@model BugTracker.Models.ProjectandUsers
+
+@using BugTracker.Helpers
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div style="min-height: 75vh; text-align: center" class="jumbotron">
-    @if (Request.IsAuthenticated)
+    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
-        <h1>Welcome</h1>
-        <h3>You are logged in</h3>
+        {
+            var stat = "";
+            if (User.IsInRole("Admin"))
+            {
+                stat = "Admin";
+            }
+            else
+            {
+                stat = "Project Manager";
+            }
+
+            <h1>@Html.Raw(stat) Portal</h1>
+        }
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 well">
+                    @Html.Partial("_ShowUsers", Model.Users.ToList());
+                </div>
+
+                <div class="col-md-6 well">
+                    @Html.Partial("_ShowProjects", Model.Projects.ToList());
+                </div>
+            </div>
+        </div>
     }
     else
     {
         <h1>Welcome</h1>
-        <h3>please login</h3>
-
-        <a href=@Url.Action("Login", "Account") class="btn btn-primary">Login</a>
+        <h3>Please Login</h3>
     }
+
 </div>
