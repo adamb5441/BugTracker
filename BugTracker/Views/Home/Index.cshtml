@@ -33,6 +33,12 @@
             </div>
         </div>
     }
+    else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+    {
+        <div class="col-md-6 well">
+            @Html.Partial("_ShowProjects", Model.Projects.ToList());
+        </div>
+    }
     else
     {
         <h1>Welcome</h1>

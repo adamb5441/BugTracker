@@ -11,10 +11,10 @@
 </p>
 <table class="table">
     <tr>
-        <th>
+        <th style="text-align: center">
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th>
+        <th style="text-align: center">
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th></th>
@@ -30,9 +30,9 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, null) 
-                @Html.ActionLink("Details", "Details", new { id = item.Id }, null) 
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, null)
+                @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null) 
+                @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null) 
+                @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
             </td>
         </tr>
     }
