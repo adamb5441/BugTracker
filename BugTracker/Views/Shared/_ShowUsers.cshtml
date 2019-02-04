@@ -6,15 +6,12 @@
 
 <h2>Users</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
-        <th>
+        <th style="text-align: center">
             @Html.DisplayNameFor(model => model.FirstName)
         </th>
-        <th>
+        <th style="text-align: center">
             @Html.DisplayNameFor(model => model.LastName)
         </th>
         @*<th>
@@ -26,8 +23,10 @@
         <th style="text-align: center">
             @Html.DisplayName("Role")
         </th>
-        <th></th>
-
+        @if (User.IsInRole("Admin"))
+        {
+            <th></th>
+        }
     </tr>
 
 @foreach (var item in Model) {
@@ -51,11 +50,14 @@
             }
             @Html.Raw(rl)
         </td>
+        @if (User.IsInRole("Admin"))
+        {
         <td>
             @Html.ActionLink("Edit", "Edit", "Users", new { id = item.Id }, null) 
             @Html.ActionLink("Details", "Details", "Users", new { id = item.Id }, null) 
             @Html.ActionLink("Delete", "Delete", "Users", new { id = item.Id }, null)
         </td>
+        }
     </tr>
 }
 

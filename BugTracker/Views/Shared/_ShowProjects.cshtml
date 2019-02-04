@@ -5,10 +5,12 @@
 }
 
 <h2>Projects</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th style="text-align: center">
@@ -29,11 +31,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null) 
-                @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null) 
-                @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
-            </td>
+            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null)
+                    @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null)
+                    @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
+                </td>
+            }
         </tr>
     }
 

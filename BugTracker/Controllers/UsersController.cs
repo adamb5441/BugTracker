@@ -17,6 +17,7 @@ namespace BugTracker.Controllers
         private UserRoleHelper rolesHelper = new UserRoleHelper();
 
         // GET: Users
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Index()
         {
             return View(db.Users.ToList());
@@ -38,6 +39,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Users/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -85,25 +87,31 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,DisplayName,AvatarUrl,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser, string roles)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,DisplayName,Email,PhoneNumber,UserName")] ApplicationUser applicationUser, string roles)
         {
             if (ModelState.IsValid)
             {
 
                 var currentrole = rolesHelper.ListUserRoles(applicationUser.Id);
-
-                foreach (var role in currentrole)
+                if (User.IsInRole("Admin"))
                 {
-                    rolesHelper.RemoveUserFromRole(applicationUser.Id, role);
+                    foreach (var role in currentrole)
+                    {
+                        rolesHelper.RemoveUserFromRole(applicationUser.Id, role);
+                    }
+                    if (!string.IsNullOrEmpty(roles))
+                        rolesHelper.AddUsertoRole(applicationUser.Id, roles);
                 }
-                if (!string.IsNullOrEmpty(roles))
-                    rolesHelper.AddUsertoRole(applicationUser.Id, roles);
+                db.Users.Attach(applicationUser);
+                db.Entry(applicationUser).Property(x => x.FirstName).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.LastName).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.DisplayName).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.Email).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.UserName).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.PhoneNumber).IsModified = true;
 
-
-
-                db.Entry(applicationUser).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             return View(applicationUser);
         }
