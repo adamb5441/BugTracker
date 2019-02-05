@@ -87,7 +87,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,DisplayName,Email,PhoneNumber,UserName")] ApplicationUser applicationUser, string roles)
+        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,Email,PhoneNumber")] ApplicationUser applicationUser, string roles)
         {
             if (ModelState.IsValid)
             {
@@ -102,11 +102,12 @@ namespace BugTracker.Controllers
                     if (!string.IsNullOrEmpty(roles))
                         rolesHelper.AddUsertoRole(applicationUser.Id, roles);
                 }
+                applicationUser.UserName = applicationUser.Email;
                 db.Users.Attach(applicationUser);
                 db.Entry(applicationUser).Property(x => x.FirstName).IsModified = true;
                 db.Entry(applicationUser).Property(x => x.LastName).IsModified = true;
-                db.Entry(applicationUser).Property(x => x.DisplayName).IsModified = true;
                 db.Entry(applicationUser).Property(x => x.Email).IsModified = true;
+                db.Entry(applicationUser).Property(x => x.DisplayName).IsModified = true;
                 db.Entry(applicationUser).Property(x => x.UserName).IsModified = true;
                 db.Entry(applicationUser).Property(x => x.PhoneNumber).IsModified = true;
 

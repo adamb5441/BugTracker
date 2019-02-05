@@ -3,44 +3,47 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Projects</h2>
-@if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-{
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-}
-<table class="table">
-    <tr>
-        <th style="text-align: center">
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th style="text-align: center">
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<div data-toggle="collapse" data-target="#demo" class="chat-room-head">
+    <h3>Projects</h3>
+    <br />
+    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-            {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null)
-                    @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null)
-                    @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
-                </td>
-            }
-        </tr>
+        @Html.ActionLink("Create New", "Create")
+
     }
 
-</table>
+</div>
+<div id="demo" class="collapse well">
+    <table class="table">
+        <tr>
+            <th style="text-align: center">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align: center">
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
 
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                {
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null)
+                        @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null)
+                        @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
+                    </td>
+                }
+            </tr>
+        }
+
+    </table>
+</div>

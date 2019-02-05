@@ -23,11 +23,10 @@
         }
         <div class="container">
             <div class="row">
-                <div class="col-md-6 well">
+                <div class="col-md-6">
                     @Html.Partial("_ShowUsers", Model.Users.ToList());
                 </div>
-
-                <div class="col-md-6 well">
+                <div class="col-md-4">
                     @Html.Partial("_ShowProjects", Model.Projects.ToList());
                 </div>
             </div>
@@ -35,9 +34,12 @@
     }
     else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
     {
-        <div class="col-md-6 well">
             @Html.Partial("_ShowProjects", Model.Projects.ToList());
-        </div>
+
+    }
+    else if(Request.IsAuthenticated) {
+        <h1>Welcome</h1>
+        <h3>Please standby you will be assigned a role shortly</h3>
     }
     else
     {
