@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-<div data-toggle="collapse" data-target="#demo" class="chat-room-head">
+<div data-toggle="collapse" data-target="#demo" class="partialheader chat-room-head">
     <h3>Projects</h3>
     <br />
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
@@ -13,9 +13,10 @@
     }
 
 </div>
+
 <div id="demo" class="collapse well">
     <table class="table">
-        <tr>
+        <tr partialheader>
             <th style="text-align: center">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -24,10 +25,12 @@
             </th>
             <th></th>
         </tr>
-
+        @{
+            int loop = 0;
+        }
         @foreach (var item in Model)
         {
-            <tr>
+            <tr class="partialheader" data-toggle="collapse" data-target=".collapse@(loop)">
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -42,7 +45,42 @@
                         @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
                     </td>
                 }
+
             </tr>
+
+            //<span id="collapse@(loop)" class="collapse well">
+            <tr style="text-align: center" class="collapse@(loop) collapse">
+                <td></td>
+                <td>
+                    Tickets
+                </td>
+                <td></td>
+            </tr>
+            <tr class="collapse@(loop) collapse">
+                <td></td>
+                <td>
+                    Title
+                </td>
+                <td>
+                    Description
+                </td>
+            </tr>
+            foreach (var ticket in item.Tickets)
+            {
+                <tr class="collapse@(loop) collapse well">
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Description)
+                    </td>
+                </tr>
+            }
+
+            //</span>
+
+            loop++;
         }
 
     </table>

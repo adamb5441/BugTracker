@@ -20,12 +20,12 @@ namespace BugTracker.Controllers
             if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
             {
                 var proj = ProjectHelper.ListUserProjects(User.Identity.GetUserId());
-                var model = new ProjectandUsers { Projects = proj, Users = db.Users };
+                var model = new DashboardMod { Projects = proj, Users = db.Users };
                 return View(model);
             }
             else
             {
-                var model = new ProjectandUsers { Projects = db.Projects, Users = db.Users };
+                var model = new DashboardMod { Projects = db.Projects, Users = db.Users, Tickets = db.Tickets };
                 return View(model);
             }
             

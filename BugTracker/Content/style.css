@@ -3484,3 +3484,11 @@ ul.chat-available-user li a:hover {
 #copyrights a {
   color: #fff;
 }
+
+.partialheader {
+    cursor: pointer;
+}
+
+.partialheader:hover {
+    filter: brightness(90%);
+}
