@@ -23,13 +23,13 @@
         }
         <div class="container">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-8">
                     @Html.Partial("_ShowUsers", Model.Users.ToList());
                 </div>
                 <div class="col-md-4">
                     @Html.Partial("_ShowProjects", Model.Projects.ToList());
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-7">
                     @Html.Partial("_ShowTickets", Model.Tickets.ToList());
                 </div>
             </div>

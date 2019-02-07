@@ -10,6 +10,8 @@
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <title>BugTracker</title>
 
+
+
     <!-- Favicons -->
     <!-- Bootstrap core CSS -->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -19,6 +21,7 @@
 
     <link href="~/Content/style-responsive.css" rel="stylesheet" />
     <link href="~/Content/style.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css" />
     <!-- =======================================================
       Template Name: Dashio
       Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
@@ -207,7 +210,7 @@
             </div>
         </aside>
         <section id="main-content">
-            <section class="wrapper">
+            <section class="wrapper" style="min-height: 85vh">
                 @RenderBody()
             </section>
         </section>
@@ -225,7 +228,7 @@
                       Buy the pro version with working PHP/AJAX contact form: https://templatemag.com/dashio-bootstrap-admin-template/
                       Licensing information: https://templatemag.com/license/
                     -->
-                    Created with Dashio template by <a href="https://templatemag.com/">TemplateMag</a>
+                    Created with Dashio template by <a href="https://templatemag.com/">TemplateMag</a> customized by Adam Brown
                 </div>
                 <a href="inbox.html#" class="go-top">
                     <i class="fa fa-angle-up"></i>
@@ -242,7 +245,11 @@
     <script src="~/Scripts/jquery.nicescroll.js"></script>
     <!--common script for all pages-->
     <script src="~/Scripts/common-scripts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <!--script for this page-->
+    <script>
+        $('.table').DataTable();
+    </script>
     @RenderSection("scripts", false)
 </body>
 

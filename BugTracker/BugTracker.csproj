@@ -198,6 +198,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AssetHelper.cs" />
+    <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\UserRoleHelper.cs" />
     <Compile Include="Migrations\201901301451137_refactor1.cs" />
