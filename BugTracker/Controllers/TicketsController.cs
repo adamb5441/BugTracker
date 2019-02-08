@@ -29,7 +29,8 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ticket ticket = db.Tickets.Find(id);
+            Ticket ticket = db.Tickets.Include(t => t.TicketAttachments).FirstOrDefault(t => t.Id == id);
+
             if (ticket == null)
             {
                 return HttpNotFound();

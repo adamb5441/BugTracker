@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Helpers;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -49,18 +52,33 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,UserId,Description,FilePath,Created")] TicketAttachment ticketAttachment)
+        public ActionResult Create(int Id, string AttachDescription, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+                var ticketAttachment = new TicketAttachment
+                {
+                    Created = DateTime.Now,
+                    TicketId = Id,
+                    UserId = User.Identity.GetUserId(),
+                    Description = AttachDescription
+
+
+                };
+
+                if (AssetHelper.IsWebFriendlyImage(image))
+                {
+                    var filename = Path.GetFileName(image.FileName);
+                    image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), filename));
+                    ticketAttachment.FilePath = "/Uploads/" + filename;
+                }
+
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Tickets", new { Id = Id });
             }
 
-            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
-            ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketAttachment.UserId);
-            return View(ticketAttachment);
+            return RedirectToAction("Details", "Tickets", new { Id = Id });
         }
 
         // GET: TicketAttachments/Edit/5
