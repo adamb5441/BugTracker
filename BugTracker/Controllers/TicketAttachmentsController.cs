@@ -52,14 +52,14 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(int Id, string AttachDescription, HttpPostedFileBase image)
+        public ActionResult Create(int TicketId, string AttachDescription, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
                 var ticketAttachment = new TicketAttachment
                 {
                     Created = DateTime.Now,
-                    TicketId = Id,
+                    TicketId = TicketId,
                     UserId = User.Identity.GetUserId(),
                     Description = AttachDescription
 
@@ -75,10 +75,10 @@ namespace BugTracker.Controllers
 
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
-                return RedirectToAction("Details", "Tickets", new { Id = Id });
+                return RedirectToAction("Details", "Tickets", new { Id = TicketId });
             }
 
-            return RedirectToAction("Details", "Tickets", new { Id = Id });
+            return RedirectToAction("Details", "Tickets", new { Id = TicketId });
         }
 
         // GET: TicketAttachments/Edit/5

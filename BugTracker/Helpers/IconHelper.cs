@@ -30,6 +30,7 @@ namespace BugTracker.Helpers
                 case ".png":
                 case ".jpeg":
                 case ".gif":
+                case ".jpg":
                     Icon = "fa fa-file-image-o";
                     break;
                 default:

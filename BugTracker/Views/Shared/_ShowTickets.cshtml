@@ -15,8 +15,8 @@
 
 </div>
 
-<div id="ticcolapse" class="collapse well">
-    <table class="table ">
+<div id="ticcolapse" class="collapse in well">
+    <table class="table">
         <thead>
             <tr>
                 <th style="text-align: center">
@@ -37,37 +37,42 @@
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Description)
                 </th>
-                <th></th>
-            </tr>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th></th>
+                }
+                </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TicketType.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
                     <td>
                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                         @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                         @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                     </td>
+                }
                 </tr>
             }
         </tbody>
