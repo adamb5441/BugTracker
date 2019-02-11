@@ -37,10 +37,16 @@
     }
     else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
     {
-            @Html.Partial("_ShowProjects", Model.Projects.ToList());
+        <div class="col-md-8">
+            @Html.Partial("_ShowTickets", Model.Tickets.ToList())
+        </div>
+        <div class="col-md-4">
+            @Html.Partial("_ShowProjects", Model.Projects.ToList())
+        </div>
 
     }
-    else if(Request.IsAuthenticated) {
+    else if (Request.IsAuthenticated)
+    {
         <h1>Welcome</h1>
         <h3>Please standby you will be assigned a role shortly</h3>
     }

@@ -17,10 +17,13 @@ namespace BugTracker.Controllers
         private ProjectHelper ProjectHelper = new ProjectHelper();
         public ActionResult Index()
         {
-            if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
+            if (User.IsInRole("Submitter") || User.IsInRole("Developer") || User.IsInRole("Project Manager"))
             {
                 var proj = ProjectHelper.ListUserProjects(User.Identity.GetUserId());
-                var model = new DashboardMod { Projects = proj, Users = db.Users };
+                var userId = User.Identity.GetUserId();
+                var tickets = db.Tickets.Where(b => b.AssignedToUserId == userId || b.OwnerUserId == userId).AsEnumerable<Ticket>(); ;
+
+                var model = new DashboardMod { Projects = proj, Users = db.Users, Tickets = tickets };
                 return View(model);
             }
             else

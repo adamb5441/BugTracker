@@ -22,7 +22,7 @@ namespace BugTracker.Helpers
             {
                 foreach(var ext in WebConfigurationManager.AppSettings["ValidExtentions"].Split(','))
                 {
-                    if (Path.GetExtension(file.FileName).Contains(ext))
+                    if (Path.GetExtension(file.FileName.ToLower()).Contains(ext.ToLower()))
                         return true;
                 }
             }

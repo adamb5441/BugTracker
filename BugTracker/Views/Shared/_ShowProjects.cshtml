@@ -16,78 +16,79 @@
 
 <div id="demo" class="collapse in well">
     <table class="table">
-        <thead>
-            <tr partialheader>
-                <th style="text-align: center">
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th style="text-align: center">
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                {
-                    <th></th>
-                }
+        
+        <tr partialheader>
+            <th style="text-align: center">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th style="text-align: center">
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+            {
+                <th></th>
+            }
             </tr>
-        </thead>
         @{
             int loop = 0;
         }
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr class="partialheader" data-toggle="collapse" data-target=".collapse@(loop)">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                    {
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", "Projects", new { id = item.Id }, null)
-                            @Html.ActionLink("Details", "Details", "Projects", new { id = item.Id }, null)
-                            @Html.ActionLink("Delete", "Delete", "Projects", new { id = item.Id }, null)
-                        </td>
-                    }
-
-                </tr>
-
-                //<span id="collapse@(loop)" class="collapse well">
-                <tr style="text-align: center" class="collapse@(loop) collapse">
-                    <td></td>
-                    <td>
-                        Tickets
-                    </td>
-                    <td></td>
-                </tr>
-                <tr class="collapse@(loop) collapse">
-                    <td></td>
-                    <td>
-                        Title
-                    </td>
-                    <td>
-                        Description
-                    </td>
-                </tr>
-                foreach (var ticket in item.Tickets)
+        @foreach (var item in Model)
+        {
+            <tr class="partialheader" data-toggle="collapse" data-target=".collapse@(loop)">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                 {
-                    <tr class="collapse@(loop) collapse well">
-                        <td></td>
-                        <td>
-                            @Html.DisplayFor(modelItem => ticket.Title)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => ticket.Description)
-                        </td>
-                    </tr>
+                <td>
+                    <div style="display: flex">
+                        <a href=@Url.Action("Details", "Projects", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                        <a href=@Url.Action("Edit", "Projects", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                        <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                    </div>
+                </td>
+
                 }
 
-                //</span>
+            </tr>
 
-                loop++;
+            //<span id="collapse@(loop)" class="collapse well">
+            <tr style="text-align: center" class="collapse@(loop) collapse">
+                <td></td>
+                <td>
+                    Tickets
+                </td>
+                <td></td>
+            </tr>
+            <tr class="collapse@(loop) collapse">
+                <td></td>
+                <td>
+                    Title
+                </td>
+                <td>
+                    Description
+                </td>
+            </tr>
+            foreach (var ticket in item.Tickets)
+            {
+                <tr class="collapse@(loop) collapse well">
+                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Description)
+                    </td>
+                </tr>
             }
-        </tbody>
+
+            //</span>
+
+            loop++;
+        }
+
     </table>
 </div>

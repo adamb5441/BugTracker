@@ -35,6 +35,8 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+            var currentrole = rolesHelper.ListUserRoles(id).FirstOrDefault();
+            ViewBag.Role = currentrole;
             return View(applicationUser);
         }
 

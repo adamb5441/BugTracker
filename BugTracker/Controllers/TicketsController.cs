@@ -67,7 +67,7 @@ namespace BugTracker.Controllers
                 ticket.TicketStatusId = 2;
                 db.Tickets.Add(ticket);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
@@ -125,7 +125,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
 
-            return View(ticket);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Tickets/Delete/5

@@ -34,9 +34,6 @@
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Title)
                 </th>
-                <th style="text-align: center">
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
                 @if (User.IsInRole("Admin"))
                 {
                     <th></th>
@@ -62,16 +59,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
                 @if (User.IsInRole("Admin"))
                 {
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    </td>
+                <td>
+                    <div style="display: flex">
+                        <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                        <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                        <a href=@Url.Action("Delete", "Tickets", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                    </div>
+                </td>
                 }
                 </tr>
             }

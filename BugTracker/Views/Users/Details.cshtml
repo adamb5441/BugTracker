@@ -4,64 +4,26 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>ApplicationUser</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
+    <div class="well row">
+        <div style="display: flex">
+            <h4>@Html.DisplayFor(model => model.UserName)</h4>
+            <h5 style="margin-left: auto">@ViewBag.Role</h5>
+        </div>
+        <hr />
+        <div class="col-md-4">
+            <p>First Name: @Html.DisplayFor(model => model.FirstName)</p>
+            <p>Last Name: @Html.DisplayFor(model => model.LastName)</p>
+            <p>Email: @Html.DisplayFor(model => model.Email)</p>
+            @Html.Partial("_ShowProjects", Model.Projects.ToList())
 
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
+            <p>@Html.ActionLink("Change Password", "ResetPassword", "Account")</p>
+            <p>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })</p>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DisplayName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DisplayName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-
-    </dl>
 </div>
 
-<p>@Html.ActionLink("Change Password", "ResetPassword", "Account")</p>
-<p>@Html.ActionLink("Edit", "Edit", new { id = Model.Id })</p>
+
 
