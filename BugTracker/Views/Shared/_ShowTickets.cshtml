@@ -6,11 +6,9 @@
 
 <div data-toggle="collapse" data-target="#ticcolapse" class="partialheader chat-room-head">
     <h3>Tickets</h3>
-    <br />
     @if (User.IsInRole("Submitter"))
     {
-        @Html.ActionLink("Create New", "Create", "Tickets")
-
+         <a style="float: right" href=@Url.Action("Create", "Tickets", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
     }
 
 </div>

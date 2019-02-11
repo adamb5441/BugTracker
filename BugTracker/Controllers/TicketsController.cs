@@ -15,7 +15,8 @@ namespace BugTracker.Controllers
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        private ProjectHelper ProjectHelper = new ProjectHelper();
+        private ProjectHelper projectHelper = new ProjectHelper();
+        private UserRoleHelper userRoleHelper = new UserRoleHelper();
 
         // GET: Tickets
         public ActionResult Index()
@@ -84,7 +85,7 @@ namespace BugTracker.Controllers
         }
         [Authorize]
         // GET: Tickets/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
             Ticket ticket = db.Tickets.Find(id);
             var userId = User.Identity.GetUserId();
@@ -98,7 +99,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if(User.IsInRole("Project Manager") && !ProjectHelper.IsUserOnProject(userId, proj.Id))
+            if(User.IsInRole("Project Manager") && !projectHelper.IsUserOnProject(userId, proj.Id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -112,8 +113,13 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
-            ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);
+
+            var projUsers = projectHelper.UsersOnProject(ticket.ProjectId);
+            //var devs = projUsers.Where(B => UserRoleHelper.IsUserInRole(B.Id, "Developer"));
+
+            var devs = projectHelper.UsersOnProjectWithRole("Developer", ticket.ProjectId);
+
+            ViewBag.AssignedToUserId = new SelectList(devs, "Id", "FirstName", ticket.AssignedToUserId);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
@@ -137,15 +143,16 @@ namespace BugTracker.Controllers
                 db.Entry(ticket).State = EntityState.Modified;
 
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
-            ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);
+            var projUsers = projectHelper.UsersOnProject(ticket.Id);
+            var devs = projUsers.Where(B => userRoleHelper.IsUserInRole(B.Id, "Developer"));
+
+            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", devs);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-
             return RedirectToAction("Index", "Home");
         }
 

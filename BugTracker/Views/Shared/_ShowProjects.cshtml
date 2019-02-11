@@ -1,15 +1,13 @@
 ﻿@model IEnumerable<BugTracker.Models.Project>
-
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Index";
 }
 <div data-toggle="collapse" data-target="#demo" class="partialheader chat-room-head">
     <h3>Projects</h3>
-    <br />
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
-        @Html.ActionLink("Create New", "Create", "Projects")
-
+            <a style="float: right" href=@Url.Action("Create", "Projects", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
     }
 
 </div>
@@ -81,10 +79,16 @@
                     <td>
                         @Html.DisplayFor(modelItem => ticket.Description)
                     </td>
+                    @{ 
+                        var userId = User.Identity.GetUserId();
+                    }
                     <td>
                         <div style="display: flex">
+                            if(ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId)
+                            {
                             <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
                             <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                            }
                             @if (User.IsInRole("Admin"))
                             {
                                 <a href=@Url.Action("Delete", "Tickets", new { id = ticket.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>

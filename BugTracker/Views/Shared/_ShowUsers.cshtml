@@ -6,10 +6,9 @@
 
 <div data-toggle="collapse" data-target="#userdrop" class="partialheader chat-room-head">
     <h3>Users</h3>
-    <br />
     @if (User.IsInRole("Admin"))
     {
-        @Html.ActionLink("Create New", "Create", "Users")
+            <a style="float: right" href=@Url.Action("Create", "Users", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
 
     }
 
