@@ -8,7 +8,7 @@
     <br />
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New", "Create", "Projects")
 
     }
 
@@ -58,29 +58,38 @@
             //<span id="collapse@(loop)" class="collapse well">
             <tr style="text-align: center" class="collapse@(loop) collapse">
                 <td></td>
-                <td>
+                <td style="font-size:20px; font-weight: 200">
                     Tickets
                 </td>
                 <td></td>
             </tr>
             <tr class="collapse@(loop) collapse">
-                <td></td>
                 <td>
                     Title
                 </td>
                 <td>
                     Description
                 </td>
+                <td></td>
             </tr>
             foreach (var ticket in item.Tickets)
             {
                 <tr class="collapse@(loop) collapse well">
-                    <td></td>
                     <td>
                         @Html.DisplayFor(modelItem => ticket.Title)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => ticket.Description)
+                    </td>
+                    <td>
+                        <div style="display: flex">
+                            <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                            <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href=@Url.Action("Delete", "Tickets", new { id = ticket.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                            }
+                        </div>
                     </td>
                 </tr>
             }

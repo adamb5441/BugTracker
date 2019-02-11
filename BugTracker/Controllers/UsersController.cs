@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.Helpers;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -68,6 +69,11 @@ namespace BugTracker.Controllers
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
+            var userId = User.Identity.GetUserId();
+            if (!User.IsInRole("Admin") || userId == id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -142,7 +148,7 @@ namespace BugTracker.Controllers
             ApplicationUser applicationUser = db.Users.Find(id);
             db.Users.Remove(applicationUser);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)

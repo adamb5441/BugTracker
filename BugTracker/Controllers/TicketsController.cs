@@ -8,12 +8,14 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
+using BugTracker.Helpers;
 
 namespace BugTracker.Controllers
 {
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ProjectHelper ProjectHelper = new ProjectHelper();
 
         // GET: Tickets
         public ActionResult Index()
@@ -39,6 +41,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "Submitter")]
         public ActionResult Create()
         {
 
@@ -56,6 +59,7 @@ namespace BugTracker.Controllers
         // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Submitter")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,ProjectId,Title,Description,OwnerUserId,AssignedToUserId,TicketPriorityId,TicketTypeId")] Ticket ticket)
@@ -78,15 +82,32 @@ namespace BugTracker.Controllers
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
         }
-
+        [Authorize]
         // GET: Tickets/Edit/5
         public ActionResult Edit(int? id)
         {
+            Ticket ticket = db.Tickets.Find(id);
+            var userId = User.Identity.GetUserId();
+            var proj = ticket.Project;
+
+            if (User.IsInRole("Submitter") && userId != ticket.OwnerUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (User.IsInRole("Developer") && userId != ticket.AssignedToUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if(User.IsInRole("Project Manager") && !ProjectHelper.IsUserOnProject(userId, proj.Id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ticket ticket = db.Tickets.Find(id);
+            
             if (ticket == null)
             {
                 return HttpNotFound();
