@@ -1,4 +1,21 @@
-﻿
+﻿.margin-lg {
+    margin: 50px
+}
+.margin-md {
+   margin: 25px
+}
+.margin-sm {
+   margin: 5px
+}
+.padding-sm {
+    padding: 5px
+}
+.padding-md {
+    padding: 25px
+}
+.padding-lg {
+    padding: 50px
+}
     body {
         padding-top: 50px;
         padding-bottom: 20px;

@@ -52,8 +52,7 @@
                 }
 
             </tr>
-
-            //<span id="collapse@(loop)" class="collapse well">
+            
             <tr style="text-align: center" class="collapse@(loop) collapse">
                 <td></td>
                 <td style="font-size:20px; font-weight: 200">
@@ -72,7 +71,7 @@
             </tr>
             foreach (var ticket in item.Tickets)
             {
-                <tr class="collapse@(loop) collapse well">
+                <tr style="filter: brightness(90%)" class="collapse@(loop) collapse well">
                     <td>
                         @Html.DisplayFor(modelItem => ticket.Title)
                     </td>
@@ -82,9 +81,10 @@
                     @{ 
                         var userId = User.Identity.GetUserId();
                     }
+                    
                     <td>
                         <div style="display: flex">
-                            if(ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId)
+                            @if(ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId || User.IsInRole("Admin"))
                             {
                             <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
                             <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
