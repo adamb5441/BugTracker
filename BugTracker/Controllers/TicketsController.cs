@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using BugTracker.Helpers;
+using System.Threading.Tasks;
 
 namespace BugTracker.Controllers
 {
@@ -17,6 +18,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private ProjectHelper projectHelper = new ProjectHelper();
         private UserRoleHelper userRoleHelper = new UserRoleHelper();
+        private TicketChangeHelper TicketWasChanged = new TicketChangeHelper();
 
         // GET: Tickets
         public ActionResult Index()
@@ -132,12 +134,14 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ProjectId,Title,Description,Created,Updated,OwnerUserId,AssignedToUserId,TicketStatusId,TicketPriorityId,TicketTypeId")] Ticket ticket)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,ProjectId,Title,Description,Created,Updated,OwnerUserId,AssignedToUserId,TicketStatusId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
                 ticket.Updated = DateTime.Now;
+                var oldticket = db.Tickets.AsNoTracking().FirstOrDefault(B => B.Id == ticket.Id);
 
+                await TicketWasChanged.TicketChangeAsync(oldticket, ticket);
                 //db.Entry(ticket).Property(x => x.ticket).IsModified = true;
 
                 db.Entry(ticket).State = EntityState.Modified;

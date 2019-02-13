@@ -201,6 +201,9 @@
     <Compile Include="Helpers\AssetHelper.cs" />
     <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
+    <Compile Include="Helpers\TicketChangeHelper.cs" />
+    <Compile Include="Helpers\TicketHistoryHelper.cs" />
+    <Compile Include="Helpers\TicketNotificationHelper.cs" />
     <Compile Include="Helpers\UserRoleHelper.cs" />
     <Compile Include="Migrations\201901301451137_refactor1.cs" />
     <Compile Include="Migrations\201901301451137_refactor1.Designer.cs">
