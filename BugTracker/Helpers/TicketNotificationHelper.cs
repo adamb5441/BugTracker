@@ -45,5 +45,10 @@ namespace BugTracker.Helpers
             db.TicketNotifications.Add(record);
             db.SaveChanges();
         }
+        public ICollection<TicketNotification> GetNotification()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            return db.TicketNotifications.Where(B => B.RecipientUserId == userId).ToList();
+        }
     }
 }

@@ -15,7 +15,7 @@
             </div>
             <hr />
             <div class="col-md-4">
-                <p>Subitted by @(Model.OwnerUser.DisplayName) on @(Model.Created) for project @(Model.Project.Name)</p>
+                <p>Subitted by @(Model.OwnerUser.UserName) on @(Model.Created) for project @(Model.Project.Name)</p>
                 <p>@Html.DisplayFor(model => model.Title)</p>
                 <p>@Html.DisplayFor(model => model.Description)</p>
 
@@ -86,7 +86,7 @@
     </div>
     <div style="float: right; margin-top: 20px" class="col-md-3 ds">
         <h4 class="centered mt">Attachments</h4>
-
+        <hr />
         @foreach (var attach in Model.TicketAttachments)
         {
 
@@ -103,25 +103,66 @@
                 </div>
             </a>
         }
-        <div style="margin-bottom: 20px">
-            @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("TicketId", Model.Id)
-                <div class="form-group">
-                    @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
-                    @Html.TextArea("AttachDescription", new { @class = "comment" })
-                    @Html.Label("Upload", htmlAttributes: new { @class = "control -label " })
-                    <div>
-                        <input name="image" type="file" id="fileUpload" style="word-wrap: break-word;"/>
+            <div style="margin-bottom: 20px">
+                @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("TicketId", Model.Id)
+                    <div class="form-group">
+                        @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
+                        @Html.TextArea("AttachDescription", new { @class = "comment" })
+                        <br />
+                        <br />
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <span class="btn btn-theme02 btn-file">
+                                <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select file</span>
+                                <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                <br />
+                                <input name="image" type="file" id="fileUpload" />
+                            </span>
+                            <span style="word-wrap: break-word;" class="fileupload-preview"></span>
+                            <a href="advanced_form_components.html#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
                     </div>
+                }
+
+            </div>
+        <h4 class="centered mt">
+            Recent Activity
+        </h4>
+        <hr />
+        <div class="detailed mt" style="margin-bottom: 20px">
+
+            <div class="recent-activity">
+                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Take(5))
+                {
+                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                    <div class="activity-panel">
+                        <h5>@history.Changed</h5>
+                        <p>@history.PropertyName</p>
+                    </div>
+                }
+            </div>
+            <div class="recent-activity pastcomments">
+                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Skip(5))
+                {
+                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                    <div class="activity-panel">
+                        <h5>@history.Changed</h5>
+                        <p>@history.PropertyName</p>
+                    </div>
+                }
+            </div>
+            @if (Model.TicketHistories.Count > 5)
+            {
+                <div style="display: flex; justify-content: center; margin-top: 20px">
+                    <a id="showcom" class="btn btn-default">Show all</a>
                 </div>
-                <input type="submit" value="Create" class="btn btn-default" />
             }
         </div>
     </div>
-</div>
-      
+  </div>
 <style>
     .comment {
         resize: none;
@@ -139,7 +180,7 @@
 
 @section scripts{
     <script>
-        //$(".pastcomments").hide()
+        $(".pastcomments").hide()
         $("#showcom").show()
         $("#showcom").click(() => {
             $(".pastcomments").toggle()

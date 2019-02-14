@@ -15,9 +15,9 @@ namespace BugTracker.Helpers
 
         public async Task TicketChangeAsync(Ticket OldTicket, Ticket NewTicket)
         {
+            var devid = NewTicket.AssignedToUserId;
             if (OldTicket.AssignedToUserId != NewTicket.AssignedToUserId)
             {
-                var devid = "";
                 if (OldTicket.AssignedToUserId == null)
                 {
                     devid = NewTicket.AssignedToUserId;
@@ -31,7 +31,7 @@ namespace BugTracker.Helpers
                     await NotificationHelper.SendNotificationAsync("Assignment", NewTicket.Id, devid2);
 
                 }
-                historyHelper.AddHistory(NewTicket.Id, "Assignment", OldTicket.AssignedToUserId.ToString(), NewTicket.AssignedToUserId.ToString());
+                historyHelper.AddHistory(NewTicket.Id, "Assignment", OldTicket.AssignedToUserId, NewTicket.AssignedToUserId);
             }
 
             if (OldTicket.Title != NewTicket.Title)

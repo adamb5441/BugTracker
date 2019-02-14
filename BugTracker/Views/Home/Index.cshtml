@@ -55,6 +55,38 @@
     {
         <h1>Welcome</h1>
         <h3>Please Login</h3>
+        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Email", "adamb5441@gmail.com")
+            @Html.Hidden("Password", "Abc!1234")
+            @Html.Hidden("RememberMe", false)
+            <button class="form-login" type="submit">Admin Login</button>
+        }
+        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Email", "dev@mailinator.com")
+            @Html.Hidden("Password", "Abc!123")
+            @Html.Hidden("RememberMe", false)
+            <button class="form-login" type="submit">Developer Login</button>
+        }
+        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Email", "sub@mailinator.com")
+            @Html.Hidden("Password", "Abc!123")
+            @Html.Hidden("RememberMe", false)
+            <button class="form-login" type="submit">Submitter Login</button>
+        }
+        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("Email", "manager@mailinator.com")
+            @Html.Hidden("Password", "Abc!123")
+            @Html.Hidden("RememberMe", false)
+            <button class="form-login" type="submit">Manager Login</button>
+        }
     }
 
 </div>

@@ -34,7 +34,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Ticket ticket = db.Tickets.Include(t => t.TicketAttachments).Include(t => t.TicketComments).FirstOrDefault(t => t.Id == id);
+            Ticket ticket = db.Tickets.Include(t => t.TicketHistories).Include(t => t.TicketAttachments).Include(t => t.TicketComments).FirstOrDefault(t => t.Id == id);
 
             if (ticket == null)
             {
@@ -121,7 +121,7 @@ namespace BugTracker.Controllers
 
             var devs = projectHelper.UsersOnProjectWithRole("Developer", ticket.ProjectId);
 
-            ViewBag.AssignedToUserId = new SelectList(devs, "Id", "FirstName", ticket.AssignedToUserId);
+            ViewBag.AssignedToUserId = new SelectList(devs, "Id", "Email", ticket.AssignedToUserId);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
@@ -140,10 +140,10 @@ namespace BugTracker.Controllers
             {
                 ticket.Updated = DateTime.Now;
                 var oldticket = db.Tickets.AsNoTracking().FirstOrDefault(B => B.Id == ticket.Id);
-
+                ticket.OwnerUserId = oldticket.OwnerUserId;
                 await TicketWasChanged.TicketChangeAsync(oldticket, ticket);
                 //db.Entry(ticket).Property(x => x.ticket).IsModified = true;
-
+                
                 db.Entry(ticket).State = EntityState.Modified;
 
                 db.SaveChanges();
@@ -152,7 +152,7 @@ namespace BugTracker.Controllers
             var projUsers = projectHelper.UsersOnProject(ticket.Id);
             var devs = projUsers.Where(B => userRoleHelper.IsUserInRole(B.Id, "Developer"));
 
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", devs);
+            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", devs);
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
