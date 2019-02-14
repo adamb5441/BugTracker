@@ -5,7 +5,7 @@
     ViewBag.Title = "Home Page";
 }
 
-<div style="min-height: 75vh; text-align: center" class="jumbotron">
+<div style=" text-align: center" class="jumbotron">
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
         {
@@ -53,40 +53,145 @@
     }
     else
     {
-        <h1>Welcome</h1>
-        <h3>Please Login</h3>
-        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Email", "adamb5441@gmail.com")
-            @Html.Hidden("Password", "Abc!1234")
-            @Html.Hidden("RememberMe", false)
-            <button class="form-login" type="submit">Admin Login</button>
-        }
-        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Email", "dev@mailinator.com")
-            @Html.Hidden("Password", "Abc!123")
-            @Html.Hidden("RememberMe", false)
-            <button class="form-login" type="submit">Developer Login</button>
-        }
-        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Email", "sub@mailinator.com")
-            @Html.Hidden("Password", "Abc!123")
-            @Html.Hidden("RememberMe", false)
-            <button class="form-login" type="submit">Submitter Login</button>
-        }
-        using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("Email", "manager@mailinator.com")
-            @Html.Hidden("Password", "Abc!123")
-            @Html.Hidden("RememberMe", false)
-            <button class="form-login" type="submit">Manager Login</button>
-        }
+        <div>
+            <h1>Welcome</h1>
+            <h3>Please Login</h3>
+        </div>
+        <div class="col-md-3">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Email", "adamb5441@gmail.com")
+                @Html.Hidden("Password", "Abc!1234")
+                @Html.Hidden("RememberMe", false)
+                <div>
+                    <div class="custom-box">
+                        <div class="servicetitle">
+                            <h4>Admin Login</h4>
+                            <hr>
+                        </div>
+                        <div class="icn-main-container">
+                            <div>
+                                <span class="icn-container">
+                                    <i class="fa fa-gears"></i>
+                                    @*<img style="height: 6vh" src="~/Images/admin.png" />*@
+
+                                </span>
+                            </div>
+                        </div>
+                        <p>Role includes</p>
+                        <ul class="pricing">
+                            <li>Delete content</li>
+                            <li>Assign users to roles, tickets and projects</li>
+                            <li>Updates content</li>
+                        </ul>
+                        <button class="margin-sm padding-sm btn btn-theme">Admin Login</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-3">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Email", "manager@mailinator.com")
+                @Html.Hidden("Password", "Abc!123")
+                @Html.Hidden("RememberMe", false)
+                <div>
+                    <div class="custom-box">
+                        <div class="servicetitle">
+                            <h4>Manager Login</h4>
+                            <hr>
+                        </div>
+                        <div class="icn-main-container">
+                            <div>
+                                <span class="icn-container">
+                                    <i class="fa fa-desktop"></i>
+                                    @*<img style="height: 6vh" src="~/Images/admin.png" />*@
+
+                                </span>
+                            </div>
+                        </div>
+                        <p>Role includes</p>
+                        <ul class="pricing">
+                            <li>Assign users to tickets and project</li>
+                            <li>Update your project and tickets</li>
+                            <li>Update tickets in your project</li>
+                        </ul>
+                        <button class="margin-sm padding-sm btn btn-theme">Manager Login</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-3">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Email", "dev@mailinator.com")
+                @Html.Hidden("Password", "Abc!123")
+                @Html.Hidden("RememberMe", false)
+                <div>
+                    <div class="custom-box">
+                        <div class="servicetitle">
+                            <h4>Developer Login</h4>
+                            <hr>
+                        </div>
+                        <div class="icn-main-container">
+                            <div>
+                                <span class="icn-container">
+                                    <i class="fa fa-keyboard-o"></i>
+                                    @*<img style="height: 6vh" src="~/Images/admin.png" />*@
+
+                                </span>
+                            </div>
+                        </div>
+                        <p>Role includes</p>
+                        <ul class="pricing">
+                            <li>Update tickets assigned to you</li>
+                            <li>Change your own profile</li>
+                            <li>Get notified of changes made to your ticket</li>
+                        </ul>
+                        <button class="margin-sm padding-sm btn btn-theme">Developer</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-3">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Email", "sub@mailinator.com")
+                @Html.Hidden("Password", "Abc!123")
+                @Html.Hidden("RememberMe", false)
+                <div>
+                    <div class="custom-box">
+                        <div class="servicetitle">
+                            <h4>Submitter Login</h4>
+                            <hr>
+                        </div>
+                        <div class="icn-main-container">
+                            <div>
+                                <span class="icn-container">
+                                    <i class="fa fa-ticket"></i>
+                                    @*<img style="height: 6vh" src="~/Images/admin.png" />*@
+
+                                </span>
+                            </div>
+                        </div>
+                        <p>Role includes</p>
+                        <ul class="pricing">
+                            <li>Submit tickets</li>
+                            <li>update to your ticket</li>
+                            <li>
+                                <br /><br />
+                            </li>
+                        </ul>
+                        <button class="margin-sm padding-sm btn btn-theme">Admin Login</button>
+                    </div>
+                </div>
+            }
+        </div>
     }
 
 </div>
