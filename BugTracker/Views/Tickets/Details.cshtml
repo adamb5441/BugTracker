@@ -10,22 +10,19 @@
     <div class="col-md-8" style="margin-top: 20px">
         <div class="well row">
             <div style="display: flex">
-                <h4>Ticket</h4>
+                <h4>Ticket <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
                 <h5 style="margin-left: auto">Priority: @Html.DisplayFor(model => model.TicketPriority.Name)</h5>
             </div>
             <hr />
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <p>Subitted by @(Model.OwnerUser.UserName) on @(Model.Created) for project @(Model.Project.Name)</p>
                 <p>@Html.DisplayFor(model => model.Title)</p>
-                <p>@Html.DisplayFor(model => model.Description)</p>
-
-                <p>
-                    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
-                </p>
+                <p class="well">@Html.DisplayFor(model => model.Description)</p>
             </div>
-            <div class="col-md-4 col-md-offset-4">
-                <p>@Html.DisplayFor(model => model.TicketStatus.Name)</p>
-                <p>@Html.DisplayFor(model => model.TicketType.Name)</p>
+            <div class="col-md-4 col-md-offset-1">
+                <p>Status: @Html.DisplayFor(model => model.TicketStatus.Name)</p>
+                <p>Type: @Html.DisplayFor(model => model.TicketType.Name)</p>
+                <p>Assigned To: @Html.DisplayFor(model => model.AssignedToUser.Email)</p>
             </div>
         </div>
 

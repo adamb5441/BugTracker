@@ -142,9 +142,20 @@ namespace BugTracker.Controllers
                 var oldticket = db.Tickets.AsNoTracking().FirstOrDefault(B => B.Id == ticket.Id);
                 ticket.OwnerUserId = oldticket.OwnerUserId;
                 await TicketWasChanged.TicketChangeAsync(oldticket, ticket);
-                //db.Entry(ticket).Property(x => x.ticket).IsModified = true;
-                
-                db.Entry(ticket).State = EntityState.Modified;
+
+                db.Tickets.Attach(ticket);
+                if (User.IsInRole("Admin"))
+                {
+                    db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
+                    db.Entry(ticket).Property(x => x.TicketStatusId).IsModified = true;
+
+                }
+                db.Entry(ticket).Property(x => x.Title).IsModified = true;
+                    db.Entry(ticket).Property(x => x.Description).IsModified = true;
+                    db.Entry(ticket).Property(x => x.TicketPriorityId).IsModified = true;
+                    db.Entry(ticket).Property(x => x.TicketTypeId).IsModified = true;
+
+                //db.Entry(ticket).State = EntityState.Modified;
 
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
