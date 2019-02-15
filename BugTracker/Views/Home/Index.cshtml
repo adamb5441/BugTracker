@@ -38,6 +38,17 @@
     }
     else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
     {
+                    var stat = "";
+            if (User.IsInRole("Developer"))
+            {
+                stat = "Developer";
+            }
+            else
+            {
+                stat = "Submitter";
+            }
+
+            <h1>@Html.Raw(stat) Portal</h1>
         <div class="col-md-8">
             @Html.Partial("_ShowTickets", Model.Tickets.ToList())
         </div>

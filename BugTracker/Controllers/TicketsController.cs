@@ -52,7 +52,9 @@ namespace BugTracker.Controllers
 
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName");
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName");
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+
+            var ownproject = 
+            ViewBag.ProjectId = new SelectList(db.Projects.Where(B => projectHelper.IsUserOnProject(User.Identity.GetUserId(), B.Id)), "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
@@ -136,6 +138,22 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,ProjectId,Title,Description,Created,Updated,OwnerUserId,AssignedToUserId,TicketStatusId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
+            var userId = User.Identity.GetUserId();
+            var proj = ticket.Project;
+
+            if (User.IsInRole("Submitter") && userId != ticket.OwnerUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (User.IsInRole("Developer") && userId != ticket.AssignedToUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (User.IsInRole("Project Manager") && !projectHelper.IsUserOnProject(userId, proj.Id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             if (ModelState.IsValid)
             {
                 ticket.Updated = DateTime.Now;
@@ -171,7 +189,7 @@ namespace BugTracker.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: Tickets/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -186,7 +204,8 @@ namespace BugTracker.Controllers
             return View(ticket);
         }
 
-        // POST: Tickets/Delete/5
+
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

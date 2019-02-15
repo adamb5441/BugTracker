@@ -16,16 +16,15 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRoleHelper rolerHelpers = new UserRoleHelper();
         private ProjectHelper projectHelper = new ProjectHelper();
-        
-        // GET: Projects
-        public ActionResult Index()
-        {
-            return View(db.Projects.ToList());
-        }
 
         // GET: Projects/Details/5
-        public ActionResult Details(int? id)
+        [Authorize(Roles = "Admin, Project Manager")]
+        public ActionResult Details(int id)
         {
+            if(User.IsInRole("Project Manager")&& projectHelper.IsUserOnProject(User.Identity.GetUserId(), id))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -82,6 +81,7 @@ namespace BugTracker.Controllers
             var users = projectHelper.UsersOnProject(id ?? 0);
             var pmId = "";
             var adminId = "";
+            var sub = "";
             List<string> devIds = new List<string>();
 
             foreach (var user in users)
@@ -97,10 +97,17 @@ namespace BugTracker.Controllers
                 }
                 if (rolerHelpers.IsUserInRole(user.Id, "Admin"))
                 {
-                    adminId = userId;
+                    adminId = user.Id;
+                }
+                if (rolerHelpers.IsUserInRole(user.Id, "Submitter"))
+                {
+                    sub = user.Id;
                 }
             }
 
+
+            var Submitter = rolerHelpers.UsersInRole("Submitter");
+            ViewBag.Submitter = new SelectList(Submitter, "Id", "Email", sub);
 
             var admin = rolerHelpers.UsersInRole("Admin");
             ViewBag.Admin = new SelectList(admin, "Id", "Email", adminId);
@@ -120,7 +127,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string ProjectManager, string Admin)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string ProjectManager, string Admin, string Submitter)
         {
             if (ModelState.IsValid)
             {
@@ -137,6 +144,9 @@ namespace BugTracker.Controllers
 
                 if (ProjectManager != null)
                     projectHelper.AddUserToProject(ProjectManager, project.Id);
+
+                if (Submitter != null)
+                    projectHelper.AddUserToProject(Submitter, project.Id);
 
                 if (Admin != null)
                     projectHelper.AddUserToProject(Admin, project.Id);
