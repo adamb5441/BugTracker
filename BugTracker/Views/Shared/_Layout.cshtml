@@ -46,37 +46,40 @@
             <a href=@Url.Action("Index", "Home") class="logo"><b>Bug<span>Tracker</span></b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
-                @{ 
+                @{
                     TicketNotificationHelper Helper = new TicketNotificationHelper();
                     var notifications = Helper.GetNotification();
                     var num = notifications.Count();
                 }
                 <ul class="nav top-menu">
                     <li id="header_notification_bar" class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
-                            <i class="fa fa-bell-o"></i>
-                            <span class="badge bg-warning">@num</span>
-                        </a>
-                        <ul class="dropdown-menu extended notification">
-                            <div class="notify-arrow notify-arrow-yellow"></div>
-                            <li>
-                                <p class="yellow">You have @(num) new notifications</p>
-                            </li>
-                            @foreach (var notification in notifications)
+                            @if (Request.IsAuthenticated)
                             {
-                            <li style="overflow: hidden">
-                                <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
-                                    <span style="overflow: scroll" class="label label-danger"><i class="fa fa-bolt"></i></span>
-                                    @notification.NotifocationBody
-                                    <span class="small italic">4 mins.</span>
-                                </a>
-                            </li>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="badge bg-warning">@num</span>
+                            </a>
                             }
-                            <li>
-                                <a href="">See all notifications</a>
-                            </li>
-                        </ul>
-                    </li>
+                            <ul class="dropdown-menu extended notification">
+                                <div class="notify-arrow notify-arrow-yellow"></div>
+                                <li>
+                                    <p class="yellow">You have @(num) new notifications</p>
+                                </li>
+                                @foreach (var notification in notifications)
+                                {
+                                    <li style="overflow: hidden">
+                                        <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
+                                            <span style="overflow: scroll" class="label label-danger"><i class="fa fa-bolt"></i></span>
+                                            @notification.NotifocationBody
+                                            <span class="small italic">4 mins.</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a href="">See all notifications</a>
+                                </li>
+                            </ul>
+                        </li>
                     <!-- notification dropdown end -->
                 </ul>
                 <!--  notification end -->
@@ -136,7 +139,7 @@
             </div>
         </aside>
         <section id="main-content">
-            <section class="wrapper site-min-height" >
+            <section class="wrapper site-min-height">
                 @RenderBody()
             </section>
         </section>
@@ -173,11 +176,23 @@
     <script src="~/Scripts/common-scripts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="~/Scripts/bootstrap-fileupload.js"></script>
+    <script src="~/Scripts/auto.js"></script>
     <!--script for this page-->
     <script>
         $('.table').DataTable();
+        $(".pastcomments").hide()
+        $("#showcom").show()
+        $("#showcom").click(() => {
+            $(".pastcomments").toggle()
+            $("#showcom").hide();
+        })
+        $(".comment").autogrow();
+        $("#cancel").click(function (e) {
+            e.preventDefault();
+            $("#txtarea").val("")
+        })
     </script>
-    @RenderSection("scripts", false)
+@RenderSection("scripts", false)
 </body>
 
 </html>

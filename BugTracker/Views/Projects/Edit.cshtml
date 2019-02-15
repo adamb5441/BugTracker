@@ -44,7 +44,7 @@
                         @Html.DropDownList("Admin", null, "none", htmlAttributes: new { @class = "form-control" })
                     </div>
                 </div>
-            }
+
             <div>
 
             </div>
@@ -54,12 +54,8 @@
                     @Html.DropDownList("ProjectManager", null, "none", htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
+            }
             <div class="form-group">
-                @Html.Label("Choose Submitter", null, htmlAttributes: new { @class = "control-label " })
-                <div class="">
-                    @Html.DropDownList("Submitter", null, htmlAttributes: new { @class = "form-control" })
-                </div>
-            </div>    <div class="form-group">
                 @Html.Label("Choose Developers", null, htmlAttributes: new { @class = "control-label " })
                 <div class="">
                     @Html.ListBox("Developer", null, htmlAttributes: new { @class = "form-control" })

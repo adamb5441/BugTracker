@@ -51,7 +51,7 @@
                     @Html.ValidationMessageFor(model => model.AssignedToUserId, "", new { @class = "text-danger" })
                 </div>
             </div>
-        }
+
         <div class="form-group padding-lg ">
             @Html.Label("Ticket Status", htmlAttributes: new { @class = "" })
             <div class="">
@@ -59,7 +59,7 @@
                 @Html.ValidationMessageFor(model => model.TicketStatusId, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        }
         <div class="form-group padding-lg ">
             @Html.Label("Ticket Priority", htmlAttributes: new { @class = "" })
             <div class="">

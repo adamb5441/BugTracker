@@ -81,7 +81,6 @@ namespace BugTracker.Controllers
 
             var users = projectHelper.UsersOnProject(id ?? 0);
             var pmId = "";
-            var subId = "";
             var adminId = "";
             List<string> devIds = new List<string>();
 
@@ -91,10 +90,7 @@ namespace BugTracker.Controllers
                 {
                     pmId = user.Id;
                 }
-                if (rolerHelpers.IsUserInRole(user.Id, "Submitter"))
-                {
-                    subId = user.Id;
-                }
+
                 if (rolerHelpers.IsUserInRole(user.Id, "Developer"))
                 {
                     devIds.Add(user.Id);
@@ -112,9 +108,6 @@ namespace BugTracker.Controllers
             var pms = rolerHelpers.UsersInRole("Project Manager");
             ViewBag.ProjectManager = new SelectList(pms, "Id", "Email", pmId);
 
-            var sub = rolerHelpers.UsersInRole("Submitter");
-            ViewBag.Submitter = new SelectList(sub, "Id", "Email",subId);
-
             var dv = rolerHelpers.UsersInRole("Developer");
             ViewBag.Developer = new MultiSelectList(dv, "Id", "Email", devIds);
 
@@ -127,7 +120,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string Submitter, string ProjectManager, string Admin)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string ProjectManager, string Admin)
         {
             if (ModelState.IsValid)
             {
@@ -141,9 +134,6 @@ namespace BugTracker.Controllers
                     {
                         projectHelper.AddUserToProject(dev, project.Id);
                     }
-
-                if (Submitter != null)
-                    projectHelper.AddUserToProject(Submitter, project.Id);
 
                 if (ProjectManager != null)
                     projectHelper.AddUserToProject(ProjectManager, project.Id);
