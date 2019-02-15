@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BugTracker.Models.Project>
+@using BugTracker.Helpers
 @using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Index";
@@ -7,14 +8,16 @@
     <h3>Projects</h3>
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
-            <a style="float: right" href=@Url.Action("Create", "Projects", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
+        <a style="float: right" href=@Url.Action("Create", "Projects", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
     }
 
 </div>
-
+@{
+    var userId = User.Identity.GetUserId();
+}
 <div id="demo" class="collapse in well">
     <table class="table">
-        
+
         <tr partialheader>
             <th style="text-align: center">
                 @Html.DisplayNameFor(model => model.Name)
@@ -26,9 +29,10 @@
             {
                 <th></th>
             }
-            </tr>
+        </tr>
         @{
             int loop = 0;
+            ProjectHelper projectHelper = new ProjectHelper();
         }
         @foreach (var item in Model)
         {
@@ -41,67 +45,70 @@
                 </td>
                 @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                 {
-                <td>
-                    <div style="display: flex">
-                        <a href=@Url.Action("Details", "Projects", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                        <a href=@Url.Action("Edit", "Projects", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                        <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
-                    </div>
-                </td>
-
-                }
-
-            </tr>
-            
-            <tr style="text-align: center" class="collapse@(loop) collapse">
-                <td></td>
-                <td style="font-size:20px; font-weight: 200">
-                    Tickets
-                </td>
-                <td></td>
-            </tr>
-            <tr class="collapse@(loop) collapse">
-                <td>
-                    Title
-                </td>
-                <td>
-                    Description
-                </td>
-                <td></td>
-            </tr>
-            foreach (var ticket in item.Tickets)
-            {
-                <tr style="filter: brightness(90%)" class="collapse@(loop) collapse well">
-                    <td>
-                        @Html.DisplayFor(modelItem => ticket.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => ticket.Description)
-                    </td>
-                    @{ 
-                        var userId = User.Identity.GetUserId();
-                    }
-                    
                     <td>
                         <div style="display: flex">
-                            @if(ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId || User.IsInRole("Admin"))
+                            @if ( projectHelper.IsUserOnProject(userId, item.Id) || User.IsInRole("Admin"))
                             {
-                            <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                            <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                <a href=@Url.Action("Details", "Projects", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                                <a href=@Url.Action("Edit", "Projects", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                             }
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a href=@Url.Action("Delete", "Tickets", new { id = ticket.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
-                            }
-                        </div>
-                    </td>
-                </tr>
-            }
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                                }
+                            </div>
+                        </td>
 
-            //</span>
+                    }
 
-            loop++;
-        }
+                        </tr>
 
-    </table>
-</div>
+                        <tr style="text-align: center" class="collapse@(loop) collapse">
+                            <td></td>
+                            <td style="font-size:20px; font-weight: 200">
+                                Tickets
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr class="collapse@(loop) collapse">
+                            <td>
+                                Title
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                            <td></td>
+                        </tr>
+                        foreach (var ticket in item.Tickets)
+                        {
+                            <tr style="filter: brightness(90%)" class="collapse@(loop) collapse well">
+                                <td>
+                                    @Html.DisplayFor(modelItem => ticket.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => ticket.Description)
+                                </td>
+
+                                <td>
+                                    <div style="display: flex">
+                                        @if (ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId || User.IsInRole("Admin"))
+                                        {
+                                            <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                                            <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        }
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a href=@Url.Action("Delete", "Tickets", new { id = ticket.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        //</span>
+
+                        loop++;
+                    }
+
+            </table>
+        </div>

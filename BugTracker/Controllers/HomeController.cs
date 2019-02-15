@@ -17,7 +17,7 @@ namespace BugTracker.Controllers
         private ProjectHelper ProjectHelper = new ProjectHelper();
         public ActionResult Index()
         {
-            if (User.IsInRole("Submitter") || User.IsInRole("Developer") || User.IsInRole("Project Manager"))
+            if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
             {
                 var proj = ProjectHelper.ListUserProjects(User.Identity.GetUserId());
                 var userId = User.Identity.GetUserId();

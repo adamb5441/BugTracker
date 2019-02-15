@@ -27,6 +27,11 @@ namespace BugTracker.Controllers
         // GET: Users/Details/5
         public ActionResult Details(string id)
         {
+            var userId = User.Identity.GetUserId();
+            if (!User.IsInRole("Admin") && userId != id)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -52,6 +57,7 @@ namespace BugTracker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,DisplayName,AvatarUrl,Email,EmailConfirmed,PasswordHash,SecurityStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,AccessFailedCount,UserName")] ApplicationUser applicationUser, string roles)
         {
@@ -70,7 +76,7 @@ namespace BugTracker.Controllers
         public ActionResult Edit(string id)
         {
             var userId = User.Identity.GetUserId();
-            if (!User.IsInRole("Admin") || userId == id)
+            if (!User.IsInRole("Admin") && userId != id)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -125,7 +131,7 @@ namespace BugTracker.Controllers
             return View(applicationUser);
         }
 
-        // GET: Users/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(string id)
         {
             if (id == null)
@@ -142,6 +148,7 @@ namespace BugTracker.Controllers
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {

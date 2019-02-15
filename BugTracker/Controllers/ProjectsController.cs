@@ -8,10 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.Helpers;
 using BugTracker.Models;
-
+using Microsoft.AspNet.Identity;
 namespace BugTracker.Controllers
 {
-    [Authorize(Roles = "Admin, Project Manager")]
     public class ProjectsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -40,6 +39,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Create()
         {
             return View();
@@ -49,13 +49,19 @@ namespace BugTracker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Description")] Project project)
         {
+
             if (ModelState.IsValid)
             {
                 db.Projects.Add(project);
                 db.SaveChanges();
+                if (User.IsInRole("Project Manager"))
+                {
+                    projectHelper.AddUserToProject(User.Identity.GetUserId(),project.Id);
+                }
                 return RedirectToAction("Index", "Home");
             }
 
@@ -63,9 +69,10 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Edit(int? id)
         {
-          
+            var userId = User.Identity.GetUserId();
             Project project = db.Projects.Find(id);
             if (project == null)
             {
@@ -75,6 +82,7 @@ namespace BugTracker.Controllers
             var users = projectHelper.UsersOnProject(id ?? 0);
             var pmId = "";
             var subId = "";
+            var adminId = "";
             List<string> devIds = new List<string>();
 
             foreach (var user in users)
@@ -91,9 +99,17 @@ namespace BugTracker.Controllers
                 {
                     devIds.Add(user.Id);
                 }
+                if (rolerHelpers.IsUserInRole(user.Id, "Admin"))
+                {
+                    adminId = userId;
+                }
             }
-            var pms = rolerHelpers.UsersInRole("Project Manager");
 
+
+            var admin = rolerHelpers.UsersInRole("Admin");
+            ViewBag.Admin = new SelectList(admin, "Id", "Email", adminId);
+
+            var pms = rolerHelpers.UsersInRole("Project Manager");
             ViewBag.ProjectManager = new SelectList(pms, "Id", "Email", pmId);
 
             var sub = rolerHelpers.UsersInRole("Submitter");
@@ -109,8 +125,9 @@ namespace BugTracker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string Submitter, string ProjectManager)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string Submitter, string ProjectManager, string Admin)
         {
             if (ModelState.IsValid)
             {
@@ -131,6 +148,9 @@ namespace BugTracker.Controllers
                 if (ProjectManager != null)
                     projectHelper.AddUserToProject(ProjectManager, project.Id);
 
+                if (Admin != null)
+                    projectHelper.AddUserToProject(Admin, project.Id);
+
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
@@ -139,6 +159,7 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -155,6 +176,7 @@ namespace BugTracker.Controllers
 
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
