@@ -139,7 +139,7 @@ namespace BugTracker.Controllers
         public async Task<ActionResult> Edit([Bind(Include = "Id,ProjectId,Title,Description,Created,Updated,OwnerUserId,AssignedToUserId,TicketStatusId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
             var userId = User.Identity.GetUserId();
-            var proj = ticket.Project;
+            var proj = ticket.ProjectId;
 
             if (User.IsInRole("Submitter") && userId != ticket.OwnerUserId)
             {
@@ -149,7 +149,8 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (User.IsInRole("Project Manager") && !projectHelper.IsUserOnProject(userId, proj.Id))
+            var isOnProject = projectHelper.IsUserOnProject(userId, proj);
+            if (User.IsInRole("Project Manager") && !isOnProject)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
