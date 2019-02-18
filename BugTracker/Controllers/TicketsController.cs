@@ -66,7 +66,8 @@ namespace BugTracker.Controllers
 
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName");
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName");
-            var projId = db.Projects.Where(B => projectHelper.IsUserOnProject(User.Identity.GetUserId(), B.Id));
+            var userId = User.Identity.GetUserId();
+            var projId = projectHelper.ListUserProjects(userId);
             ViewBag.ProjectId = new SelectList(projId, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
