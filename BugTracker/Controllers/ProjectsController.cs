@@ -129,8 +129,13 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 var users = projectHelper.UsersOnProject(project.Id).ToList();
+                var projectmana = "";
                 foreach (var use in users)
                 {
+                    if(rolerHelpers.IsUserInRole(use.Id, "Project Manager"))
+                    {
+                        projectmana = use.Id;
+                    }
                     projectHelper.RemoveUserFromProject(use.Id, project.Id);
                 }
                 if (Developer != null)
@@ -138,9 +143,10 @@ namespace BugTracker.Controllers
                     {
                         projectHelper.AddUserToProject(dev, project.Id);
                     }
-
                 if (ProjectManager != null)
                     projectHelper.AddUserToProject(ProjectManager, project.Id);
+                else
+                    projectHelper.AddUserToProject(projectmana, project.Id);
 
                 if (Submitter != null)
                     projectHelper.AddUserToProject(Submitter, project.Id);
