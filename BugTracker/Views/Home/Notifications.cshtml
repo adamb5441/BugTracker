@@ -1,0 +1,13 @@
+﻿@model IEnumerable<BugTracker.Models.TicketNotification>
+@{
+    ViewBag.Title = "Notifications";
+}
+
+<h2>Notifications</h2>
+
+@foreach(var notification in Model)
+{
+    <p>
+        @Html.Raw(notification.NotifocationBody)
+    </p>
+}

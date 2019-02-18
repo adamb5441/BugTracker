@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
-
+@using Microsoft.AspNet.Identity
+@using BugTracker.Helpers
+@{
+    ProjectHelper projectHelper = new ProjectHelper();
+}
 @{
     ViewBag.Title = "Index";
 }
@@ -8,7 +12,7 @@
     <h3>Tickets</h3>
     @if (User.IsInRole("Submitter"))
     {
-         <a style="float: right" href=@Url.Action("Create", "Tickets", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
+        <a style="float: right" href=@Url.Action("Create", "Tickets", null) class="btn btn-default"><i class="fa fa-plus"></i></a>
     }
 
 </div>
@@ -32,39 +36,46 @@
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Title)
                 </th>
-                    <th></th>
+                <th></th>
 
-                </tr>
+            </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Project.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    <div style="display: flex">
-                        <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                        <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a href=@Url.Action("Delete", "Tickets", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Project.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @{
+                            var userId = User.Identity.GetUserId();
+                            var isuseronproject = projectHelper.IsUserOnProject(userId, item.ProjectId);
                         }
-                    </div>
-                </td>
+                        <div style="display: flex">
+                            @if (isuseronproject || User.IsInRole("Admin"))
+                            {
+                                <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                                <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href=@Url.Action("Delete", "Tickets", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                            }
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>

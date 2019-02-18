@@ -15,6 +15,8 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRoleHelper rolesHelper = new UserRoleHelper();
         private ProjectHelper ProjectHelper = new ProjectHelper();
+        private TicketNotificationHelper notificationHelper = new TicketNotificationHelper();
+
         public ActionResult Index()
         {
             if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
@@ -32,6 +34,11 @@ namespace BugTracker.Controllers
                 return View(model);
             }
             
+        }
+        public ActionResult Notifications()
+        {   var userId = User.Identity.GetUserId();
+            var model = db.TicketNotifications.Where(B => B.RecipientUserId == userId).ToList();
+            return View(model);
         }
 
     }

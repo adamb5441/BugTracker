@@ -29,12 +29,25 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
+            Ticket ticketref = db.Tickets.Find(id);
+            var userId = User.Identity.GetUserId();
+            var proj = ticketref.ProjectId;
+            if (User.IsInRole("Submitter") && userId != ticketref.OwnerUserId)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            if (User.IsInRole("Developer") && userId != ticketref.AssignedToUserId)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var isuseronproject = projectHelper.IsUserOnProject(userId, proj);
+            if (User.IsInRole("Project Manager") && !isuseronproject)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             Ticket ticket = db.Tickets.Include(t => t.TicketHistories).Include(t => t.TicketAttachments).Include(t => t.TicketComments).FirstOrDefault(t => t.Id == id);
 
             if (ticket == null)
@@ -93,7 +106,7 @@ namespace BugTracker.Controllers
         {
             Ticket ticket = db.Tickets.Find(id);
             var userId = User.Identity.GetUserId();
-            var proj = ticket.Project;
+            var proj = ticket.ProjectId;
 
             if (User.IsInRole("Submitter") && userId != ticket.OwnerUserId)
             {
@@ -103,7 +116,8 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if(User.IsInRole("Project Manager") && !projectHelper.IsUserOnProject(userId, proj.Id))
+            var isuseronproject = projectHelper.IsUserOnProject(userId, proj);
+            if (User.IsInRole("Project Manager") && !isuseronproject)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

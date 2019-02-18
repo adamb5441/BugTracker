@@ -51,7 +51,7 @@
                     var notifications = Helper.GetNotification();
                     var num = notifications.Count();
                 }
-                <ul class="nav top-menu">
+                <ul class="nav top-menu" >
                     <li id="header_notification_bar" class="dropdown">
                             @if (User.IsInRole("Developer"))
                             {
@@ -60,23 +60,24 @@
                                 <span class="badge bg-warning">@num</span>
                             </a>
                             }
-                            <ul class="dropdown-menu extended notification">
+                            <ul class="dropdown-menu extended notification" >
                                 <div class="notify-arrow notify-arrow-yellow"></div>
                                 <li>
                                     <p class="yellow">You have @(num) new notifications</p>
                                 </li>
-                                @foreach (var notification in notifications)
+                                @foreach (var notification in notifications.OrderByDescending(B => B.Created).Take(5))
                                 {
                                     <li style="overflow: hidden">
                                         <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
-                                            <span style="overflow: scroll" class="label label-danger"><i class="fa fa-bolt"></i></span>
-                                            @notification.NotifocationBody
-                                            <span class="small italic">4 mins.</span>
+                                            <span style="font-size: 10px">
+                                                <b> @notification.NotifocationBody</b>
+                                            </span>
+                                            @*<span class="small italic">4 mins.</span>*@
                                         </a>
                                     </li>
                                 }
                                 <li>
-                                    <a href="">See all notifications</a>
+                                    <a href=@Url.Action("Notifications", "Home")>See all notifications</a>
                                 </li>
                             </ul>
                         </li>
