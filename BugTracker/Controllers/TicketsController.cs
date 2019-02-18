@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -52,9 +53,8 @@ namespace BugTracker.Controllers
 
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName");
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName");
-
-            var ownproject = 
-            ViewBag.ProjectId = new SelectList(db.Projects.Where(B => projectHelper.IsUserOnProject(User.Identity.GetUserId(), B.Id)), "Id", "Name");
+            var projId = db.Projects.Where(B => projectHelper.IsUserOnProject(User.Identity.GetUserId(), B.Id));
+            ViewBag.ProjectId = new SelectList(projId, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");

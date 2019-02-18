@@ -4,73 +4,8 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Tickets</h2>
+<h1 style="text-align: center">All Tickets</h1>
+
+@Html.Partial("_ShowTickets", Model.ToList())
 
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayName("Assigned To User")
-        </th>
-        <th>
-            @Html.DisplayName("Owner User")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Project.Name)
-        </th>
-        <th>
-            @Html.DisplayName("Ticket Priority")
-        </th>
-        <th>
-            @Html.DisplayName("Ticket Status")
-        </th>
-        <th>
-            @Html.DisplayName("Ticket Type")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.AssignedToUser.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OwnerUser.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Project.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TicketType.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-    </tr>
-}
-
-</table>

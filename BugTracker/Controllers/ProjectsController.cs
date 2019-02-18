@@ -21,11 +21,8 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Details(int id)
         {
-            if(User.IsInRole("Project Manager")&& projectHelper.IsUserOnProject(User.Identity.GetUserId(), id))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            if (id == null)
+            var isOnProj = projectHelper.IsUserOnProject(User.Identity.GetUserId(), id);
+            if (User.IsInRole("Project Manager")&& !isOnProj)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
