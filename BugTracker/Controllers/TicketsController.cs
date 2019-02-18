@@ -177,19 +177,16 @@ namespace BugTracker.Controllers
                 await TicketWasChanged.TicketChangeAsync(oldticket, ticket);
 
                 db.Tickets.Attach(ticket);
-                if (User.IsInRole("Admin"))
+                if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                 {
                     db.Entry(ticket).Property(x => x.AssignedToUserId).IsModified = true;
                     db.Entry(ticket).Property(x => x.TicketStatusId).IsModified = true;
-
                 }
-                db.Entry(ticket).Property(x => x.Title).IsModified = true;
+                    db.Entry(ticket).Property(x => x.Title).IsModified = true;
                     db.Entry(ticket).Property(x => x.Description).IsModified = true;
                     db.Entry(ticket).Property(x => x.TicketPriorityId).IsModified = true;
                     db.Entry(ticket).Property(x => x.TicketTypeId).IsModified = true;
-
-                //db.Entry(ticket).State = EntityState.Modified;
-
+                
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
