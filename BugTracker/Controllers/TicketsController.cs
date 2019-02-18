@@ -122,11 +122,6 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             
             if (ticket == null)
             {
@@ -153,14 +148,16 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,ProjectId,Title,Description,Created,Updated,OwnerUserId,AssignedToUserId,TicketStatusId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
+            var oldticket = db.Tickets.AsNoTracking().FirstOrDefault(B => B.Id == ticket.Id);
             var userId = User.Identity.GetUserId();
-            var proj = ticket.ProjectId;
-
-            if (User.IsInRole("Submitter") && userId != ticket.OwnerUserId)
+            var proj = oldticket.ProjectId;
+            var owner = oldticket.OwnerUserId;
+            if (User.IsInRole("Submitter") && userId != owner)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            if (User.IsInRole("Developer") && userId != ticket.AssignedToUserId)
+            var assigned = oldticket.AssignedToUserId;
+            if (User.IsInRole("Developer") && userId != assigned)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -173,7 +170,7 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 ticket.Updated = DateTime.Now;
-                var oldticket = db.Tickets.AsNoTracking().FirstOrDefault(B => B.Id == ticket.Id);
+                
                 ticket.OwnerUserId = oldticket.OwnerUserId;
                 await TicketWasChanged.TicketChangeAsync(oldticket, ticket);
 
