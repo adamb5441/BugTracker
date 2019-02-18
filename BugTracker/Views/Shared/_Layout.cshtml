@@ -53,7 +53,7 @@
                 }
                 <ul class="nav top-menu">
                     <li id="header_notification_bar" class="dropdown">
-                            @if (Request.IsAuthenticated)
+                            @if (User.IsInRole("Developer"))
                             {
                             <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                                 <i class="fa fa-bell-o"></i>

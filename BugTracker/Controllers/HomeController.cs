@@ -21,7 +21,7 @@ namespace BugTracker.Controllers
             {
                 var proj = ProjectHelper.ListUserProjects(User.Identity.GetUserId());
                 var userId = User.Identity.GetUserId();
-                var tickets = db.Tickets.Where(b => b.AssignedToUserId == userId || b.OwnerUserId == userId).AsEnumerable<Ticket>(); ;
+                var tickets = db.Tickets.Where(b => b.AssignedToUserId == userId || b.OwnerUserId == userId).AsEnumerable<Ticket>(); 
 
                 var model = new DashboardMod { Projects = proj, Users = db.Users, Tickets = tickets };
                 return View(model);
