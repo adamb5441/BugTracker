@@ -10,8 +10,8 @@ namespace BugTracker.Helpers
 {
     public class TicketChangeHelper
     {
-        private static TicketHistoryHelper historyHelper = new TicketHistoryHelper();
-        private static TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
+        private TicketHistoryHelper historyHelper = new TicketHistoryHelper();
+        private TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
 
         public async Task TicketChangeAsync(Ticket OldTicket, Ticket NewTicket)
         {
@@ -19,13 +19,18 @@ namespace BugTracker.Helpers
             var devid = NewTicket.AssignedToUserId;
             if (!currentUser.IsInRole("Developer") && !currentUser.IsInRole("Submitter"))
             {
+                //var oldTicketAssignedToUserId = OldTicket.AssignedToUserId ?? "";
+                //var newTicketAssignedToUserId = NewTicket.AssignedToUserId ?? "";
+
+                //if (oldTicketAssignedToUserId != newTicketAssignedToUserId)
                 if (OldTicket.AssignedToUserId != NewTicket.AssignedToUserId)
                 {
+                    //if (oldTicketAssignedToUserId == "")
                     if (OldTicket.AssignedToUserId == null)
                     {
                         devid = NewTicket.AssignedToUserId;
                         if(devid != null)
-                        await NotificationHelper.SendNotificationAsync("You hav been assigned to ticket","Assignment", NewTicket.Id, devid);
+                        await NotificationHelper.SendNotificationAsync("You have been assigned to ticket","Assignment", NewTicket.Id, devid);
                     }
                     else
                     {

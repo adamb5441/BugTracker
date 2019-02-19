@@ -21,7 +21,7 @@ namespace BugTracker.Helpers
             var emailfrom = user.Email;
             ApplicationUser userto = db.Users.Find(devid);
             var emailto = userto.Email;
-            var body = notification + " " + ticketnum + " has changed please contact a supervisor for further questions. ";
+            var body = $"{notification} {ticketnum} has changed please contact a supervisor for further questions.";
 
             var email = new MailMessage(from, emailto)
             {
