@@ -43,8 +43,9 @@ namespace BugTracker.Controllers
         }
         public class ticketdata
         {
-            public int ticketsubs { get; set; }
+            
             public string week { get; set; }
+            public int ticketsubs { get; set; }
         }
         public string TicketData()
         {
@@ -60,7 +61,7 @@ namespace BugTracker.Controllers
                     return (7*i < daysago && daysago <= (i + 2) * 7);
 
                 });
-                output.Add(new ticketdata { ticketsubs = ticketcount.Count(), week = (i+1).ToString() });
+                output.Add(new ticketdata { ticketsubs = ticketcount.Count(), week =  DateTime.Now.AddDays(-7*i).ToString("yyyy-MM-dd") });
                 i++;
             } while(i < 12);
 

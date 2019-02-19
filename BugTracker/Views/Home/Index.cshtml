@@ -4,8 +4,8 @@
 @{
     ViewBag.Title = "Home Page";
 }
-
-<div style=" text-align: center" >
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<div style=" text-align: center">
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
         {
@@ -21,9 +21,14 @@
 
             <h1>@Html.Raw(stat) Portal</h1>
         }
+        
         <div class="container">
             <div class="row">
+                @Html.Partial("_LineChart")
+            </div>
+            <div class="row">
                 <div class="col-md-8">
+                    
                     @Html.Partial("_ShowUsers", Model.Users.ToList())
                     <div style="margin-top: 10px">
                         @Html.Partial("_ShowTickets", Model.Tickets.ToList())
@@ -38,17 +43,17 @@
     }
     else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
     {
-                    var stat = "";
-            if (User.IsInRole("Developer"))
-            {
-                stat = "Developer";
-            }
-            else
-            {
-                stat = "Submitter";
-            }
+        var stat = "";
+        if (User.IsInRole("Developer"))
+        {
+            stat = "Developer";
+        }
+        else
+        {
+            stat = "Submitter";
+        }
 
-            <h1>@Html.Raw(stat) Portal</h1>
+        <h1>@Html.Raw(stat) Portal</h1>
         <div class="col-md-8">
             @Html.Partial("_ShowTickets", Model.Tickets.ToList())
         </div>
@@ -206,3 +211,9 @@
     }
 
 </div>
+@section scripts{
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="~/Scripts/myTables.js"></script>
+
+}

@@ -86,6 +86,26 @@
                 <!--  notification end -->
             </div>
             <div class="top-menu">
+                        @*@{ 
+                            var stat = "";
+                            if (User.IsInRole("Admin"))
+                            {
+                                stat = "Admin";
+                            }
+                            else if (User.IsInRole("Project Manager"))
+                            {
+                                stat = "Project Manager";
+                            }
+                            else if (User.IsInRole("Developer"))
+                            {
+                                stat = "Developer";
+                            }
+                            else if(User.IsInRole("Submitter"))
+                            {
+                                stat = "Submitter";
+                            }
+                        }
+                        @Html.Raw(stat) Portal*@
                 @if (Request.IsAuthenticated)
                 {
                     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -178,7 +198,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="~/Scripts/bootstrap-fileupload.js"></script>
     <script src="~/Scripts/auto.js"></script>
-    <script src="~/Scripts/myTables.js"></script>
     <!--script for this page-->
     <script>
 
