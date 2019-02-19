@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 
 namespace BugTracker.Controllers
 {
@@ -40,6 +41,32 @@ namespace BugTracker.Controllers
             var model = db.TicketNotifications.Where(B => B.RecipientUserId == userId).ToList();
             return View(model);
         }
+        public class ticketdata
+        {
+            public int ticketsubs { get; set; }
+            public string week { get; set; }
+        }
+        public string TicketData()
+        {
+            
+            var tickets = db.Tickets.ToList();
+            var output = new List<ticketdata>();
+            int i= 0;
 
+            do
+            {
+                var ticketcount = tickets.Where(B => {
+                    var daysago = Int32.Parse(DateTimeOffset.Now.Subtract(B.Created).ToString("%d"));
+                    return (7*i < daysago && daysago <= (i + 2) * 7);
+
+                });
+                output.Add(new ticketdata { ticketsubs = ticketcount.Count(), week = (i+1).ToString() });
+                i++;
+            } while(i < 12);
+
+
+            string json = JsonConvert.SerializeObject(output);
+            return json;
+        }
     }
 }

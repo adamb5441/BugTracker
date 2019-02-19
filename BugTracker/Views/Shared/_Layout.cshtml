@@ -51,36 +51,36 @@
                     var notifications = Helper.GetNotification();
                     var num = notifications.Count();
                 }
-                <ul class="nav top-menu" >
+                <ul class="nav top-menu">
                     <li id="header_notification_bar" class="dropdown">
-                            @if (User.IsInRole("Developer"))
-                            {
+                        @if (User.IsInRole("Developer"))
+                        {
                             <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                                 <i class="fa fa-bell-o"></i>
                                 <span class="badge bg-warning">@num</span>
                             </a>
+                        }
+                        <ul class="dropdown-menu extended notification">
+                            <div class="notify-arrow notify-arrow-yellow"></div>
+                            <li>
+                                <p class="yellow">You have @(num) new notifications</p>
+                            </li>
+                            @foreach (var notification in notifications.OrderByDescending(B => B.Created).Take(5))
+                            {
+                                <li style="overflow: hidden">
+                                    <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
+                                        <span style="font-size: 10px">
+                                            <b> @notification.NotifocationBody</b>
+                                        </span>
+                                        @*<span class="small italic">4 mins.</span>*@
+                                    </a>
+                                </li>
                             }
-                            <ul class="dropdown-menu extended notification" >
-                                <div class="notify-arrow notify-arrow-yellow"></div>
-                                <li>
-                                    <p class="yellow">You have @(num) new notifications</p>
-                                </li>
-                                @foreach (var notification in notifications.OrderByDescending(B => B.Created).Take(5))
-                                {
-                                    <li style="overflow: hidden">
-                                        <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
-                                            <span style="font-size: 10px">
-                                                <b> @notification.NotifocationBody</b>
-                                            </span>
-                                            @*<span class="small italic">4 mins.</span>*@
-                                        </a>
-                                    </li>
-                                }
-                                <li>
-                                    <a href=@Url.Action("Notifications", "Home")>See all notifications</a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li>
+                                <a href=@Url.Action("Notifications", "Home")>See all notifications</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- notification dropdown end -->
                 </ul>
                 <!--  notification end -->
@@ -178,8 +178,10 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="~/Scripts/bootstrap-fileupload.js"></script>
     <script src="~/Scripts/auto.js"></script>
+    <script src="~/Scripts/myTables.js"></script>
     <!--script for this page-->
     <script>
+
         $('.table').DataTable();
         $(".pastcomments").hide()
         $("#showcom").show()
@@ -192,8 +194,9 @@
             e.preventDefault();
             $("#txtarea").val("")
         })
+
     </script>
-@RenderSection("scripts", false)
+    @RenderSection("scripts", false)
 </body>
 
 </html>
