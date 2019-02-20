@@ -4,8 +4,10 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.Helpers;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 
@@ -51,7 +53,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TicketId,CommentBody")] TicketComment ticketComment)
+        public async Task<ActionResult> Create([Bind(Include = "TicketId,CommentBody")] TicketComment ticketComment)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +63,10 @@ namespace BugTracker.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Details", "Tickets", new { Id = ticketComment.TicketId });
             }
+
+            var ticket = db.Tickets.Find(ticketComment.TicketId);
+            TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
+            await NotificationHelper.SendNotificationAsync("A comment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);

@@ -20,15 +20,17 @@ namespace BugTracker.Controllers
         private ProjectHelper projectHelper = new ProjectHelper();
         private UserRoleHelper userRoleHelper = new UserRoleHelper();
         private TicketChangeHelper TicketWasChanged = new TicketChangeHelper();
+        private ArchiveHelper archivedHelper = new ArchiveHelper();
 
-        // GET: Tickets
+
         public ActionResult Index()
         {
-            var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            return View(tickets.ToList());
+            return View(archivedHelper.GetActiveTickets());
         }
-
-        // GET: Tickets/Details/5
+        public ActionResult Archive()
+        {
+            return View(archivedHelper.GetArchivedTickets());
+        }
         public ActionResult Details(int id)
         {
             Ticket ticketref = db.Tickets.Find(id);

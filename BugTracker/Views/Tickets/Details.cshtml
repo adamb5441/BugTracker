@@ -5,13 +5,31 @@
 
                 ViewBag.Title = "Details";
 }
+@{ 
+    bool onhold = Model.TicketStatus.Name == "On Hold";
+}
 
 <div class="container">
     <div class="col-md-8" style="margin-top: 20px">
         <div class="well row">
             <div style="display: flex">
-                <h4>Ticket <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
-                <h5 style="margin-left: auto">Priority: @Html.DisplayFor(model => model.TicketPriority.Name)</h5>
+                @if (onhold && User.IsInRole("Admin") || onhold && User.IsInRole("Project Manager"))
+                {
+                <div>
+                    <h4>Ticket on hold<a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
+                    <p>The ticket is on hold meaning the no further action can be taken until the status has changed.</p>
+                </div>
+                }
+                else if (onhold)
+                {
+                    <h4>Ticket<i style="margin-left: 5px" class="label label-danger">On Hold</i></h4>
+
+                }
+                else
+                {
+                    <h4>Ticket <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
+                    <h5 style="margin-left: auto">Priority: @Html.DisplayFor(model => model.TicketPriority.Name)</h5>
+                }
             </div>
             <hr />
             <div class="col-md-7">
@@ -26,80 +44,86 @@
             </div>
         </div>
 
-
-        <h4>Comments</h4>
-        @if (User.Identity.IsAuthenticated)
+        @if (!onhold)
         {
-            <div style="margin-top: 10px" class="row col-md-12">
-                @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post, new { @class = "Form-horizontal", role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("TicketId", Model.Id)
+            <h4>Comments</h4>
+            if (User.Identity.IsAuthenticated)
+            {
+                <div style="margin-top: 10px" class="row col-md-12">
+                    @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post, new { @class = "Form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("TicketId", Model.Id)
 
-                    <div style="display: flex; justify-content: center; flex-direction:column; align-items: flex-start" class="form-group">
+                        <div style="display: flex; justify-content: center; flex-direction:column; align-items: flex-start" class="form-group">
 
-                        @Html.TextArea("CommentBody", new { @class = "comment", placeholder = "Add a comment", id = "txtarea" })
+                            @Html.TextArea("CommentBody", new { @class = "comment", placeholder = "Add a comment", id = "txtarea" })
 
-                        <div style="margin-top: 10px; display: flex; justify-content: space-around">
-                            <button class="btn btn-default" id="cancel">Cancel</button>
-                            <button style="margin-left: 10px" class="btn btn-primary" type="submit" value="submit">add</button>
+                            <div style="margin-top: 10px; display: flex; justify-content: space-around">
+                                <button class="btn btn-default" id="cancel">Cancel</button>
+                                <button style="margin-left: 10px" class="btn btn-primary" type="submit" value="submit">add</button>
+                            </div>
+                            <br />
+
                         </div>
-                        <br />
+                    }
+                </div>
 
-                    </div>
-                }
-            </div>
-
+            }
         }
-
-        @foreach (var comment in Model.TicketComments.OrderByDescending(b => b.Created))
+        @if (!onhold)
         {
-            <div class="col-md-10 panel panel-default">
-                <div class="row ">
-                    <div class="col-md-12" style="display: flex; margin-top: 5px">
-                        <div style="margin: 5px; font-size: 25px">@comment.User.DisplayName</div>
-                        @{
-                            TimeSpan age = DateTimeOffset.Now.Subtract(comment.Created);
-                            var str = age.ToString("%d");
-                            if (str == "0")
-                            {
-                                str = "Posted today";
+            foreach (var comment in Model.TicketComments.OrderByDescending(b => b.Created))
+            {
+                <div class="col-md-10 panel panel-default">
+                    <div class="row ">
+                        <div class="col-md-12" style="display: flex; margin-top: 5px">
+                            <div style="margin: 5px; font-size: 25px">@comment.User.DisplayName</div>
+                            @{
+                                TimeSpan age = DateTimeOffset.Now.Subtract(comment.Created);
+                                var str = age.ToString("%d");
+                                if (str == "0")
+                                {
+                                    str = "Posted today";
+                                }
+                                else
+                                {
+                                    str = str + " day(s) ago";
+                                }
                             }
-                            else
-                            {
-                                str = str + " day(s) ago";
-                            }
-                        }
-                        <div style="margin: 5px">@str</div>
+                            <div style="margin: 5px">@str</div>
+                        </div>
+                    </div>
+                    <div style="margin: 10px" class="row">
+                        <div class="col-md-12 panel panel-default">
+                            <p>@comment.CommentBody</p>
+                        </div>
                     </div>
                 </div>
-                <div style="margin: 10px" class="row">
-                    <div class="col-md-12 panel panel-default">
-                        <p>@comment.CommentBody</p>
-                    </div>
-                </div>
-            </div>
+            }
         }
     </div>
-    <div style="float: right; margin-top: 20px" class="col-md-3 ds">
-        <h4 class="centered mt">Attachments</h4>
-        <hr />
-        @foreach (var attach in Model.TicketAttachments)
-        {
+    @if (!onhold)
+    {
+        <div style="float: right; margin-top: 20px" class="col-md-3 ds">
+            <h4 class="centered mt">Attachments</h4>
+            <hr />
+            @foreach (var attach in Model.TicketAttachments)
+            {
 
-            string icon = IconHelper.GetIcon(attach.FilePath);
-            <a href="@(attach.FilePath)">
-                <div class="desc">
-                    <div class="thumb">
-                        <span class="badge bg-theme"><i class="@(icon)"></i></span>
-                    </div>
-                    <div style="word-wrap: break-word;" class="details">
-                        @Html.Raw(attach.FilePath.Replace("/Uploads/", ""))
-                    </div>
+                string icon = IconHelper.GetIcon(attach.FilePath);
+                <a href="@(attach.FilePath)">
+                    <div class="desc">
+                        <div class="thumb">
+                            <span class="badge bg-theme"><i class="@(icon)"></i></span>
+                        </div>
+                        <div style="word-wrap: break-word;" class="details">
+                            @Html.Raw(attach.FilePath.Replace("/Uploads/", ""))
+                        </div>
 
-                </div>
-            </a>
-        }
+                    </div>
+                </a>
+            }
             <div style="margin-bottom: 20px">
                 @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
                 {
@@ -125,41 +149,44 @@
                 }
 
             </div>
-        <h4 class="centered mt">
-            Recent Activity
-        </h4>
-        <hr />
-        <div class="detailed mt" style="margin-bottom: 20px">
+            <h4 class="centered mt">
+                Recent Activity
+            </h4>
+            <hr />
+            <div class="detailed mt" style="margin-bottom: 20px">
 
-            <div class="recent-activity">
-                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Take(5))
-                {
-                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
-                    <div class="activity-panel">
-                        <h5>@history.Changed</h5>
-                        <p>@history.PropertyName changed.</p>
-                    </div>
-                }
-            </div>
-            <div class="recent-activity pastcomments">
-                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Skip(5))
-                {
-                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
-                    <div class="activity-panel">
-                        <h5>@history.Changed</h5>
-                        <p>@history.PropertyName</p>
-                    </div>
-                }
-            </div>
-            @if (Model.TicketHistories.Count > 5)
-            {
-                <div style="display: flex; justify-content: center; margin-top: 20px">
-                    <a id="showcom" class="btn btn-default">Show all</a>
+                <div class="recent-activity">
+                    @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Take(5))
+                    {
+                        <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                        <div class="activity-panel">
+                            <h5>@history.Changed</h5>
+                            <p>@history.PropertyName changed.</p>
+                        </div>
+                    }
                 </div>
+                <div class="recent-activity pastcomments">
+                    @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Skip(5))
+                    {
+                        <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                        <div class="activity-panel">
+                            <h5>@history.Changed</h5>
+                            <p>@history.PropertyName</p>
+                        </div>
+                    }
+                </div>
+                @if (Model.TicketHistories.Count > 5)
+                {
+                    <div style="display: flex; justify-content: center; margin-top: 20px">
+                        <a id="showcom" class="btn btn-default">Show all</a>
+                    </div>
+                }
+            </div>
             }
         </div>
+    }
     </div>
-  </div>
+  
 <style>
     .comment {
         resize: none;

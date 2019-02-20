@@ -194,6 +194,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AssetHelper.cs" />
+    <Compile Include="Helpers\ArchiveHelper.cs" />
     <Compile Include="Helpers\IconHelper.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\TicketChangeHelper.cs" />
@@ -320,6 +321,7 @@
     <Content Include="Views\Home\Notifications.cshtml" />
     <Content Include="Views\Shared\_LineChart.cshtml" />
     <Content Include="Views\Shared\_DonutChart.cshtml" />
+    <Content Include="Views\Tickets\Archive.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

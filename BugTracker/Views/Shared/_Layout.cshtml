@@ -142,7 +142,20 @@
                         <li>
                             <a href=@Url.Action("Index", "Tickets")>
                                 <i class="fa fa-ticket"></i>
-                                <span>All Tickets</span>
+                                <span>Active Tickets</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href=@Url.Action("Archive", "Tickets")>
+                                <i class="fa fa-ticket"></i>
+                                @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                {
+                                    <span>Archived Tickets</span>
+                                }
+                                else
+                                {
+                                    <span>My Archived Tickets</span>
+                                }
                             </a>
                         </li>
                     }

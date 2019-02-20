@@ -1,0 +1,11 @@
+﻿@model IEnumerable<BugTracker.Models.Ticket>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h1 style="text-align: center">All Tickets</h1>
+
+@Html.Partial("_ShowTickets", Model.ToList())
+
+

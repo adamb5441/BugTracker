@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.Helpers;
@@ -47,7 +48,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(int TicketId, string AttachDescription, HttpPostedFileBase image)
+        public async Task<ActionResult> Create(int TicketId, string AttachDescription, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
@@ -60,13 +61,16 @@ namespace BugTracker.Controllers
 
 
                 };
-
+                var ticket = db.Tickets.Find(TicketId);
                 if (AssetHelper.IsWebFriendlyImage(image))
                 {
                     var filename = Path.GetFileName(image.FileName);
                     image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), filename));
                     ticketAttachment.FilePath = "/Uploads/" + filename;
                 }
+                
+                TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
+                await NotificationHelper.SendNotificationAsync("A attachment has been added to ticket","Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
 
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
