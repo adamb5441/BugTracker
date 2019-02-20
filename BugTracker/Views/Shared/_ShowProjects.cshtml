@@ -25,10 +25,7 @@
             <th style="text-align: center">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-            {
                 <th></th>
-            }
         </tr>
         @{
             int loop = 0;
@@ -43,23 +40,25 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
-                {
-                    <td>
+
+                <td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                    {
                         <div style="display: flex">
-                            @if ( projectHelper.IsUserOnProject(userId, item.Id) || User.IsInRole("Admin"))
+                            @if (projectHelper.IsUserOnProject(userId, item.Id) || User.IsInRole("Admin"))
                             {
                                 <a href=@Url.Action("Details", "Projects", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
                                 <a href=@Url.Action("Edit", "Projects", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                             }
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
-                                }
-                            </div>
-                        </td>
-
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                            }
+                        </div>
                     }
+                </td>
+
+                    
 
                         </tr>
 
