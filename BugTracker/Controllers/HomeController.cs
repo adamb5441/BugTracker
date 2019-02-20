@@ -47,6 +47,29 @@ namespace BugTracker.Controllers
             public string week { get; set; }
             public int ticketsubs { get; set; }
         }
+        public class projectdata
+        {
+
+            public string label { get; set; }
+            public int value { get; set; }
+        }
+        [Authorize]
+        public string ProjectData()
+        {
+            var output = new List<projectdata>();
+            var projects = db.Projects.Include("Tickets").ToList();
+            var tickets = db.Tickets.ToList();
+            decimal total = tickets.Count();
+            foreach(var project in projects)
+            {
+
+                decimal percent = 100 * (project.Tickets.Count() / total);
+                output.Add(new projectdata { label = project.Name, value = decimal.ToInt32(decimal.Round(percent)) });
+            }
+            string json = JsonConvert.SerializeObject(output);
+            return json;
+        }
+        [Authorize]
         public string TicketData()
         {
             
@@ -58,7 +81,7 @@ namespace BugTracker.Controllers
             {
                 var ticketcount = tickets.Where(B => {
                     var daysago = Int32.Parse(DateTimeOffset.Now.Subtract(B.Created).ToString("%d"));
-                    return (7*i < daysago && daysago <= (i + 2) * 7);
+                    return (7*i <= daysago && daysago < (i + 2) * 7);
 
                 });
                 output.Add(new ticketdata { ticketsubs = ticketcount.Count(), week =  DateTime.Now.AddDays(-7*i).ToString("yyyy-MM-dd") });

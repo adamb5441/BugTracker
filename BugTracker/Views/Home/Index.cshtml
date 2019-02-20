@@ -24,6 +24,7 @@
         
         <div class="container">
             <div class="row">
+                @Html.Partial("_DonutChart")
                 @Html.Partial("_LineChart")
             </div>
             <div class="row">
@@ -213,7 +214,6 @@
 </div>
 @section scripts{
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-    <script src="~/Scripts/myTables.js"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>\
+    <script src="~/Scripts/myCharts.js"></script>
 }
