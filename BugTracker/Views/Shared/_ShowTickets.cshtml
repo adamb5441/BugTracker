@@ -63,9 +63,11 @@
                         @{
                             var userId = User.Identity.GetUserId();
                             var isuseronproject = projectHelper.IsUserOnProject(userId, item.ProjectId);
+                            var isuseronticket = userId == item.AssignedToUserId || userId == item.OwnerUserId;
+                            var ticketarchived = item.TicketStatus.Name == "Finished" || item.TicketStatus.Name == "Removed";
                         }
                         <div style="display: flex">
-                            @if (isuseronproject || User.IsInRole("Admin"))
+                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject && !ticketarchived || isuseronticket && !ticketarchived)
                             {
                                 <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
                                 <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>

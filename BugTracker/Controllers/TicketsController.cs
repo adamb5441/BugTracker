@@ -24,11 +24,15 @@ namespace BugTracker.Controllers
 
 
         public ActionResult Index()
-        {
+        { 
             return View(archivedHelper.GetActiveTickets());
         }
         public ActionResult Archive()
         {
+            if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
+            {
+                return View(archivedHelper.GetYourActiveTickets(User.Identity.GetUserId()));
+            }
             return View(archivedHelper.GetArchivedTickets());
         }
         public ActionResult Details(int id)

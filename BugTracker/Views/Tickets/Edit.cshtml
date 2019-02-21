@@ -6,15 +6,16 @@
 
 @{
     bool onhold = Model.TicketStatus.Name == "On Hold";
+    bool canchange = User.IsInRole("Admin") || User.IsInRole("Project Manager");
 }
-@if (onhold && !User.IsInRole("Admin") || onhold && !User.IsInRole("Project Manager"))
+@if (onhold && !canchange)
 {
 <h2 style="text-align: center">Ticket On Hold</h2>
-
+<p style="text-align: center">The ticket is being held for review and should be made availible shortly</p>
 }
 else
 {
-@using (Html.BeginForm(new { @class = "contact-form" }))
+using (Html.BeginForm(new { @class = "contact-form" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.Created)
