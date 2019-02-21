@@ -31,7 +31,7 @@ namespace BugTracker.Controllers
         {
             if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
             {
-                return View(archivedHelper.GetYourActiveTickets(User.Identity.GetUserId()));
+                return View(archivedHelper.GetYourArchivedTickets(User.Identity.GetUserId()));
             }
             return View(archivedHelper.GetArchivedTickets());
         }
@@ -42,16 +42,16 @@ namespace BugTracker.Controllers
             var proj = ticketref.ProjectId;
             if (User.IsInRole("Submitter") && userId != ticketref.OwnerUserId)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
             if (User.IsInRole("Developer") && userId != ticketref.AssignedToUserId)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
             var isuseronproject = projectHelper.IsUserOnProject(userId, proj);
             if (User.IsInRole("Project Manager") && !isuseronproject)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
             }
 
             Ticket ticket = db.Tickets.Include(t => t.TicketHistories).Include(t => t.TicketAttachments).Include(t => t.TicketComments).FirstOrDefault(t => t.Id == id);

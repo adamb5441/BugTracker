@@ -16,6 +16,7 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private UserRoleHelper rolerHelpers = new UserRoleHelper();
         private ProjectHelper projectHelper = new ProjectHelper();
+        private ArchiveHelper archiveHelper = new ArchiveHelper();
 
         // GET: Projects/Details/5
         [Authorize(Roles = "Admin, Project Manager")]
@@ -52,6 +53,7 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {
+
                 db.Projects.Add(project);
                 db.SaveChanges();
                 if (User.IsInRole("Project Manager"))
@@ -124,8 +126,55 @@ namespace BugTracker.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Project project, List<string> Developer, string ProjectManager, string Admin, string Submitter)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description, Archived")] Project project, List<string> Developer, string ProjectManager, string Admin, string Submitter)
         {
+            var checktickets = archiveHelper.doesProjectHaveTicketsOpen(project.Id);
+            if (checktickets && project.Archived)
+            {
+                var id = project.Id;
+                var users = projectHelper.UsersOnProject(id);
+                var pmId = "";
+                var adminId = "";
+                var sub = "";
+                List<string> devIds = new List<string>();
+
+                foreach (var user in users)
+                {
+                    if (rolerHelpers.IsUserInRole(user.Id, "Project Manager"))
+                    {
+                        pmId = user.Id;
+                    }
+
+                    if (rolerHelpers.IsUserInRole(user.Id, "Developer"))
+                    {
+                        devIds.Add(user.Id);
+                    }
+                    if (rolerHelpers.IsUserInRole(user.Id, "Admin"))
+                    {
+                        adminId = user.Id;
+                    }
+                    if (rolerHelpers.IsUserInRole(user.Id, "Submitter"))
+                    {
+                        sub = user.Id;
+                    }
+                }
+
+
+                var submitter = rolerHelpers.UsersInRole("Submitter");
+                ViewBag.Submitter = new SelectList(submitter, "Id", "Email", sub);
+
+                var admin = rolerHelpers.UsersInRole("Admin");
+                ViewBag.Admin = new SelectList(admin, "Id", "Email", adminId);
+
+                var pms = rolerHelpers.UsersInRole("Project Manager");
+                ViewBag.ProjectManager = new SelectList(pms, "Id", "Email", pmId);
+
+                var dv = rolerHelpers.UsersInRole("Developer");
+                ViewBag.Developer = new MultiSelectList(dv, "Id", "Email", devIds);
+
+                ViewBag.ticketWarning = "The project you are trying to archive has tickets open. Please close all tickets and try again.";
+                return View(project);
+            }
             if (ModelState.IsValid)
             {
                 var users = projectHelper.UsersOnProject(project.Id).ToList();

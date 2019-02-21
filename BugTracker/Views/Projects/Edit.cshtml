@@ -15,66 +15,75 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal well" style="margin: 10px 20% 0px">
-        <h2>Edit Project</h2>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
-        <div style="padding: 10px 50px 0px">
+<div class="form-horizontal well" style="margin: 10px 20% 0px">
+    <h2>Edit Project</h2>
+    <p class="text-danger">
+        @ViewBag.ticketWarning
+    </p>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+    <div style="padding: 10px 50px 0px">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+            <div class="">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+            <div class="">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Archive ticket", null, htmlAttributes: new { @class = "control-label " })
+            <div class="">
+                @Html.CheckBoxFor(model => model.Archived, null)
+            </div>
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
             <div class="form-group">
-                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+                @Html.Label("Add yourself to the project", null, htmlAttributes: new { @class = "control-label " })
                 <div class="">
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    @Html.DropDownList("Admin", null, "none", htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
-                <div class="">
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="form-group">
-                    @Html.Label("Add yourself to the project", null, htmlAttributes: new { @class = "control-label " })
-                    <div class="">
-                        @Html.DropDownList("Admin", null, "none", htmlAttributes: new { @class = "form-control" })
-                    </div>
-                </div>
+            <div>
 
-                <div>
-
-                </div>
-                <div class="form-group">
-                    @Html.Label("Choose Project Manager", null, htmlAttributes: new { @class = "control-label " })
-                    <div class="">
-                        @Html.DropDownList("ProjectManager", null, "none", htmlAttributes: new { @class = "form-control" })
-                    </div>
-                </div>
-            }
-            <div class="form-group">
-                @Html.Label("Choose Submitter", null, htmlAttributes: new { @class = "control-label " })
-                <div class="">
-                    @Html.DropDownList("Submitter", null, "none", htmlAttributes: new { @class = "form-control" })
-                </div>
             </div>
             <div class="form-group">
-                @Html.Label("Choose Developers", null, htmlAttributes: new { @class = "control-label " })
+                @Html.Label("Choose Project Manager", null, htmlAttributes: new { @class = "control-label " })
                 <div class="">
-                    @Html.ListBox("Developer", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownList("ProjectManager", null, "none", htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
+        }
+        <div class="form-group">
+            @Html.Label("Choose Submitter", null, htmlAttributes: new { @class = "control-label " })
+            <div class="">
+                @Html.DropDownList("Submitter", null, "none", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Choose Developers", null, htmlAttributes: new { @class = "control-label " })
+            <div class="">
+                @Html.ListBox("Developer", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
 
-            <div class="form-group">
-                <div class="">
-                    <input type="submit" value="Save" class="btn btn-default" />
-                </div>
+        <div class="form-group">
+            <div class="">
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
+</div>
 }
 
 @section Scripts {

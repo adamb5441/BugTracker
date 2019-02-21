@@ -67,10 +67,13 @@
                             var ticketarchived = item.TicketStatus.Name == "Finished" || item.TicketStatus.Name == "Removed";
                         }
                         <div style="display: flex">
-                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject && !ticketarchived || isuseronticket && !ticketarchived)
+                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject || isuseronticket)
                             {
                                 <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                                if (!ticketarchived || User.IsInRole("Admin"))
+                                {
                                 <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                }
                             }
                             @if (User.IsInRole("Admin"))
                             {

@@ -13,6 +13,7 @@
 
 </div>
 @{
+    ArchiveHelper archiveHelper = new ArchiveHelper();
     var userId = User.Identity.GetUserId();
 }
 <div id="demo" class="collapse in well">
@@ -78,7 +79,8 @@
                             </td>
                             <td></td>
                         </tr>
-                        foreach (var ticket in item.Tickets)
+
+                        foreach (var ticket in archiveHelper.ProjectsActiveTickets(item.Id))
                         {
                             <tr style="filter: brightness(90%)" class="collapse@(loop) collapse well">
                                 <td>
@@ -89,15 +91,23 @@
                                 </td>
 
                                 <td>
+                                    @{
+                                        var isuseronproject = projectHelper.IsUserOnProject(userId, ticket.ProjectId);
+                                        var isuseronticket = userId == ticket.AssignedToUserId || userId == ticket.OwnerUserId;
+                                        var ticketarchived = ticket.TicketStatus.Name == "Finished" || ticket.TicketStatus.Name == "Removed";
+                                    }
                                     <div style="display: flex">
-                                        @if (ticket.AssignedToUserId == userId || ticket.OwnerUserId == userId || User.IsInRole("Admin"))
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject || isuseronticket)
                                         {
-                                            <a href=@Url.Action("Details", "Tickets", new { id = ticket.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                                            <a href=@Url.Action("Edit", "Tickets", new { id = ticket.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                            <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                                            if (!ticketarchived)
+                                            {
+                                                <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                            }
                                         }
                                         @if (User.IsInRole("Admin"))
                                         {
-                                            <a href=@Url.Action("Delete", "Tickets", new { id = ticket.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
+                                            <a href=@Url.Action("Delete", "Tickets", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
                                         }
                                     </div>
                                 </td>

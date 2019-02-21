@@ -7,6 +7,7 @@
 }
 @{ 
     bool onhold = Model.TicketStatus.Name == "On Hold";
+    var ticketarchived = Model.TicketStatus.Name == "Finished" || Model.TicketStatus.Name == "Removed";
 }
 
 <div class="container">
@@ -27,7 +28,13 @@
                 }
                 else
                 {
-                    <h4>Ticket <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
+                    <h4>
+                        Ticket
+                        @if(User.IsInRole("Admin") || User.IsInRole("Project Manager") || !ticketarchived)
+                        {
+                        <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                        }
+                    </h4>
                     <h5 style="margin-left: auto">Priority: @Html.DisplayFor(model => model.TicketPriority.Name)</h5>
                 }
             </div>
@@ -44,7 +51,7 @@
             </div>
         </div>
 
-        @if (!onhold)
+        @if (!onhold && !ticketarchived)
         {
             <h4>Comments</h4>
             if (User.Identity.IsAuthenticated)
@@ -105,85 +112,88 @@
     </div>
     @if (!onhold)
     {
-        <div style="float: right; margin-top: 20px" class="col-md-3 ds">
-            <h4 class="centered mt">Attachments</h4>
-            <hr />
-            @foreach (var attach in Model.TicketAttachments)
+    <div style="float: right; margin-top: 20px" class="col-md-3 ds">
+        <h4 class="centered mt">Attachments</h4>
+        <hr />
+        @foreach (var attach in Model.TicketAttachments)
+        {
+
+            string icon = IconHelper.GetIcon(attach.FilePath);
+            <a href="@(attach.FilePath)">
+                <div class="desc">
+                    <div class="thumb">
+                        <span class="badge bg-theme"><i class="@(icon)"></i></span>
+                    </div>
+                    <div style="word-wrap: break-word;" class="details">
+                        @Html.Raw(attach.FilePath.Replace("/Uploads/", ""))
+                    </div>
+
+                </div>
+            </a>
+        }
+        @if (!ticketarchived)
+        {
+        <div style="margin-bottom: 20px">
+            @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
             {
-
-                string icon = IconHelper.GetIcon(attach.FilePath);
-                <a href="@(attach.FilePath)">
-                    <div class="desc">
-                        <div class="thumb">
-                            <span class="badge bg-theme"><i class="@(icon)"></i></span>
-                        </div>
-                        <div style="word-wrap: break-word;" class="details">
-                            @Html.Raw(attach.FilePath.Replace("/Uploads/", ""))
-                        </div>
-
+                @Html.AntiForgeryToken()
+                @Html.Hidden("TicketId", Model.Id)
+                <div class="form-group">
+                    @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
+                    @Html.TextArea("AttachDescription", new { @class = "comment" })
+                    <br />
+                    <br />
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <span class="btn btn-theme02 btn-file">
+                            <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select file</span>
+                            <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                            <br />
+                            <input name="image" type="file" id="fileUpload" />
+                        </span>
+                        <span style="word-wrap: break-word;" class="fileupload-preview"></span>
+                        <a href="advanced_form_components.html#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
                     </div>
-                </a>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
             }
-            <div style="margin-bottom: 20px">
-                @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("TicketId", Model.Id)
-                    <div class="form-group">
-                        @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
-                        @Html.TextArea("AttachDescription", new { @class = "comment" })
-                        <br />
-                        <br />
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <span class="btn btn-theme02 btn-file">
-                                <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select file</span>
-                                <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                                <br />
-                                <input name="image" type="file" id="fileUpload" />
-                            </span>
-                            <span style="word-wrap: break-word;" class="fileupload-preview"></span>
-                            <a href="advanced_form_components.html#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                    </div>
-                }
+            
+        </div>
+        }
+        <h4 class="centered mt">
+            Recent Activity
+        </h4>
+        <hr />
+        <div class="detailed mt" style="margin-bottom: 20px">
 
-            </div>
-            <h4 class="centered mt">
-                Recent Activity
-            </h4>
-            <hr />
-            <div class="detailed mt" style="margin-bottom: 20px">
-
-                <div class="recent-activity">
-                    @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Take(5))
-                    {
-                        <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
-                        <div class="activity-panel">
-                            <h5>@history.Changed</h5>
-                            <p>@history.PropertyName changed.</p>
-                        </div>
-                    }
-                </div>
-                <div class="recent-activity pastcomments">
-                    @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Skip(5))
-                    {
-                        <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
-                        <div class="activity-panel">
-                            <h5>@history.Changed</h5>
-                            <p>@history.PropertyName</p>
-                        </div>
-                    }
-                </div>
-                @if (Model.TicketHistories.Count > 5)
+            <div class="recent-activity">
+                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Take(5))
                 {
-                    <div style="display: flex; justify-content: center; margin-top: 20px">
-                        <a id="showcom" class="btn btn-default">Show all</a>
+                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                    <div class="activity-panel">
+                        <h5>@history.Changed</h5>
+                        <p>@history.PropertyName changed.</p>
                     </div>
                 }
             </div>
+            <div class="recent-activity pastcomments">
+                @foreach (var history in Model.TicketHistories.OrderByDescending(b => b.Changed).Skip(5))
+                {
+                    <div class="activity-icon bg-theme"><i class="fa fa-check"></i></div>
+                    <div class="activity-panel">
+                        <h5>@history.Changed</h5>
+                        <p>@history.PropertyName</p>
+                    </div>
+                }
+            </div>
+            @if (Model.TicketHistories.Count > 5)
+            {
+                <div style="display: flex; justify-content: center; margin-top: 20px">
+                    <a id="showcom" class="btn btn-default">Show all</a>
+                </div>
             }
         </div>
+        }
+    </div>
     }
     </div>
   
