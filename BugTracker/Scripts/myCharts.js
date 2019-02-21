@@ -25,7 +25,20 @@ $.ajax({
 });
 
 
-
+$.ajax({
+    url: "/Home/YourProjectData",
+    type: 'GET',
+    success: function (result) {
+        var chartData = JSON.parse(result);
+        console.log(chartData)
+        new Morris.Donut({
+            element: 'yourdonut',
+            data: chartData,
+            colors: ['#3498db', '#2980b9', '#34495e'],
+            formatter: function (y) { return y + "%" }
+        });
+    }
+});
 
 $.ajax({
     url: "/Home/ProjectData",

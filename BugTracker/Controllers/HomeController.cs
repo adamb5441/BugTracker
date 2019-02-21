@@ -61,13 +61,45 @@ namespace BugTracker.Controllers
             var projects = db.Projects.Include("Tickets").ToList();
             var tickets = db.Tickets.ToList();
             decimal total = tickets.Count();
-            foreach(var project in projects)
+            if (total == 0)
             {
+                output.Add(new projectdata { label = "Project data will display here.", value = 100 });
+            }
+            else
+            {
+                foreach (var project in projects)
+                {
 
-                decimal percent = 100 * (project.Tickets.Count() / total);
-                output.Add(new projectdata { label = project.Name, value = decimal.ToInt32(decimal.Round(percent)) });
+                    decimal percent = 100 * (project.Tickets.Count() / total);
+                    output.Add(new projectdata { label = project.Name, value = decimal.ToInt32(decimal.Round(percent)) });
+                }
             }
             string json = JsonConvert.SerializeObject(output);
+            return json;
+        }
+        [Authorize]
+        public string YourProjectData()
+        {
+            var userId = User.Identity.GetUserId(); 
+            var output = new List<projectdata>();
+            var projects = archivedHelper.GetMyActiveProjects(userId);
+            var tickets = archivedHelper.GetYourActiveTickets(userId);
+            decimal total = tickets.Count();
+            if (total == 0)
+            {
+                output.Add(new projectdata { label = "Project data will display here.", value = 100 });
+            }
+            else
+            {
+                foreach (var project in projects)
+                {
+                        decimal percent = 100 * (project.Tickets.Count() / total);
+                        output.Add(new projectdata { label = project.Name, value = decimal.ToInt32(decimal.Round(percent)) });
+                    
+                }
+            }
+            string json = JsonConvert.SerializeObject(output);
+
             return json;
         }
         [Authorize]

@@ -21,7 +21,7 @@
 
             <h1>@Html.Raw(stat) Portal</h1>
         }
-        
+
         <div class="container">
             <div class="row">
                 @Html.Partial("_DonutChart")
@@ -36,11 +36,11 @@
                         @Html.Partial("_ShowUsers", Model.Users.ToList())
                     </div>
                 </div>
-                    <div style="margin-top: 10px" class="col-md-4">
-                        @Html.Partial("_ShowProjects", Model.Projects.ToList())
-                    </div>
-
+                <div style="margin-top: 10px" class="col-md-4">
+                    @Html.Partial("_ShowProjects", Model.Projects.ToList())
                 </div>
+
+            </div>
         </div>
     }
     else if (User.IsInRole("Submitter") || User.IsInRole("Developer"))
@@ -56,13 +56,16 @@
         }
 
         <h1>@Html.Raw(stat) Portal</h1>
-        <div style="margin-top: 10px" class="col-md-8">
+
+        <div style="margin-top: 10px" class="col-md-7">
             @Html.Partial("_ShowTickets", Model.Tickets.ToList())
         </div>
         <div class="col-md-4" style="margin-top: 10px">
             @Html.Partial("_ShowProjects", Model.Projects.ToList())
-        </div>
+            @Html.Partial("_PersonalDonut")
 
+        </div>
+            
     }
     else if (Request.IsAuthenticated)
     {

@@ -84,7 +84,7 @@
 
                 foreach (var ticket in archiveHelper.ProjectsActiveTickets(item.Id))
                 {
-                    <tr style="filter: brightness(90%)" class="collapse@(loop) collapse well">
+                    <tr style="background-color: #F5F5F5" class="collapse@(loop) collapse well">
                         <td>
                             @Html.DisplayFor(modelItem => ticket.Title)
                         </td>
@@ -115,8 +115,6 @@
                         </td>
                     </tr>
                 }
-
-                //</span>
 
                 loop++;
             }

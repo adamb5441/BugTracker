@@ -323,6 +323,7 @@
     <Content Include="Views\Shared\_DonutChart.cshtml" />
     <Content Include="Views\Tickets\Archive.cshtml" />
     <Content Include="Views\Projects\Archive.cshtml" />
+    <Content Include="Views\Shared\_PersonalDonut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
