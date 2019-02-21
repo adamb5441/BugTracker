@@ -34,7 +34,13 @@ namespace BugTracker.Controllers
             }
             return View(project);
         }
-
+        [Authorize(Roles = "Admin, Project Manager")]
+        public ActionResult Archive()
+        {
+            ViewBag.Archive = false;
+            var projects = archiveHelper.GetArchivedProjects();
+            return View(projects);
+        }
         // GET: Projects/Create
         [Authorize(Roles = "Admin, Project Manager")]
         public ActionResult Create()

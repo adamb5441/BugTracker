@@ -159,6 +159,15 @@
                             </a>
                         </li>
                     }
+                    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
+                    {
+                        <li>
+                            <a href=@Url.Action("Archive", "Projects")>
+                                <i class="fa fa-wrench"></i>
+                                <span>Archived Projects</span>
+                            </a>
+                        </li>
+                    }
                     @if (Request.IsAuthenticated)
                     {
                         <li>

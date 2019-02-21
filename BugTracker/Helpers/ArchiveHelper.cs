@@ -11,6 +11,7 @@ namespace BugTracker.Helpers
     public class ArchiveHelper
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ProjectHelper projectHelper = new ProjectHelper();
         public ICollection<Ticket> GetActiveTickets()
         {
             var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
@@ -20,7 +21,7 @@ namespace BugTracker.Helpers
         public ICollection<Ticket> GetYourActiveTickets(string Id)
         {
             var tickets = db.Tickets.Include(t => t.AssignedToUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            tickets = tickets.Where(b => b.TicketStatus.Name != "Finished" && b.TicketStatus.Name != "Removed" && b.AssignedToUserId == Id || b.OwnerUserId == Id);
+            tickets = tickets.Where(b => b.TicketStatus.Name != "Finished" && b.TicketStatus.Name != "Removed" && (b.OwnerUserId == Id || b.AssignedToUserId == Id) );
             return tickets.ToList();
         }
         public ICollection<Ticket> GetArchivedTickets()
@@ -56,6 +57,26 @@ namespace BugTracker.Helpers
             }
 
             return false;
+        }
+        public ICollection<Project> GetActiveProjects()
+        {
+            var projects = db.Projects.Where(b => !b.Archived);
+            return projects.ToList();
+        }
+        public ICollection<Project> GetArchivedProjects()
+        {
+            var projects = db.Projects.Where(b => b.Archived);
+            return projects.ToList();
+        }
+        public ICollection<Project> GetMyActiveProjects(string id)
+        {
+            var projects = projectHelper.ListUserProjects(id).Where(b => !b.Archived);
+            return projects.ToList();
+        }
+        public ICollection<Project> GetMyArchivedProjects(string id)
+        {
+            var projects = projectHelper.ListUserProjects(id).Where(b => b.Archived);
+            return projects.ToList();
         }
     }
 }

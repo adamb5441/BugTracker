@@ -7,7 +7,11 @@
 
 <div style="text-align: center">
     <h4>
-        @Model.Name <a href=@Url.Action("Edit", "Projects", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+        @Model.Name 
+        @if (!Model.Archived || User.IsInRole("Admin"))
+        {
+        <a href=@Url.Action("Edit", "Projects", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+        }
     </h4>
     <p>@Model.Description</p>
     <hr />

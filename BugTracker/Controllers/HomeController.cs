@@ -27,12 +27,12 @@ namespace BugTracker.Controllers
                 var userId = User.Identity.GetUserId();
                 var tickets = archivedHelper.GetYourActiveTickets(User.Identity.GetUserId()); 
 
-                var model = new DashboardMod { Projects = proj, Users = db.Users, Tickets = tickets };
+                var model = new DashboardMod { Projects = archivedHelper.GetMyActiveProjects(userId), Users = db.Users, Tickets = tickets };
                 return View(model);
             }
             else
             {
-                var model = new DashboardMod { Projects = db.Projects, Users = db.Users, Tickets = archivedHelper.GetActiveTickets()};
+                var model = new DashboardMod { Projects = archivedHelper.GetActiveProjects(), Users = db.Users, Tickets = archivedHelper.GetActiveTickets()};
                 return View(model);
             }
             
