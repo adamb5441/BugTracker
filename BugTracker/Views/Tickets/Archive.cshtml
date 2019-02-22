@@ -4,8 +4,10 @@
     ViewBag.Title = "Index";
 }
 
-<h1 style="text-align: center">All Tickets</h1>
-
-@Html.Partial("_ShowTickets", Model.ToList())
-
+<h1 style="text-align: center">Archived Tickets</h1>
+<div style="display: flex; justify-content: center">
+    <div style="width: 60vw">
+        @Html.Partial("_ShowTickets", Model.ToList())
+    </div>
+</div>
 

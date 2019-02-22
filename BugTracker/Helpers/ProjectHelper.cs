@@ -13,6 +13,11 @@ namespace BugTracker.Helpers
 
         public bool IsUserOnProject(string userId, int projectId)
         {
+            if(userId == null || userId == "")
+            {
+                Console.WriteLine("UserId is null");
+                return false;
+            }
             var project = db.Projects.Find(projectId);
             bool flag = project.Users.Any(u=>u.Id==userId);
             return (flag);

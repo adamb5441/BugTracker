@@ -4,14 +4,14 @@
     ViewBag.Title = "Details";
 }
 
-<div>
-    <div class="well row">
+<div style="display: flex; justify-content: center">
+    <div style="width: 60vw" class="well row">
         <div style="display: flex">
             <h4>@Html.DisplayFor(model => model.UserName)</h4>
             <h5 style="margin-left: auto">@ViewBag.Role</h5>
         </div>
         <hr />
-        <div class="col-md-4">
+        <div class="col-md-6">
             <p>First Name: @Html.DisplayFor(model => model.FirstName)</p>
             <p>Last Name: @Html.DisplayFor(model => model.LastName)</p>
             <p>Email: @Html.DisplayFor(model => model.Email)</p>
@@ -24,6 +24,5 @@
     </div>
 
 </div>
-
 
 

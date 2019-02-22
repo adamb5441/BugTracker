@@ -86,26 +86,26 @@
                 <!--  notification end -->
             </div>
             <div class="top-menu">
-                        @*@{ 
-                            var stat = "";
-                            if (User.IsInRole("Admin"))
-                            {
-                                stat = "Admin";
-                            }
-                            else if (User.IsInRole("Project Manager"))
-                            {
-                                stat = "Project Manager";
-                            }
-                            else if (User.IsInRole("Developer"))
-                            {
-                                stat = "Developer";
-                            }
-                            else if(User.IsInRole("Submitter"))
-                            {
-                                stat = "Submitter";
-                            }
+                @*@{
+                        var stat = "";
+                        if (User.IsInRole("Admin"))
+                        {
+                            stat = "Admin";
                         }
-                        @Html.Raw(stat) Portal*@
+                        else if (User.IsInRole("Project Manager"))
+                        {
+                            stat = "Project Manager";
+                        }
+                        else if (User.IsInRole("Developer"))
+                        {
+                            stat = "Developer";
+                        }
+                        else if(User.IsInRole("Submitter"))
+                        {
+                            stat = "Submitter";
+                        }
+                    }
+                    @Html.Raw(stat) Portal*@
                 @if (Request.IsAuthenticated)
                 {
                     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
@@ -163,7 +163,7 @@
                     {
                         <li>
                             <a href=@Url.Action("Archive", "Projects")>
-                                <i class="fa fa-wrench"></i>
+                                <i class="fa fa-archive"></i>
                                 <span>Archived Projects</span>
                             </a>
                         </li>
@@ -220,6 +220,8 @@
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="~/Scripts/bootstrap-fileupload.js"></script>
     <script src="~/Scripts/auto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     <!--script for this page-->
     <script>
 

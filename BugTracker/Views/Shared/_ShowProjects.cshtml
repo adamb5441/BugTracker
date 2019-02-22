@@ -53,10 +53,6 @@
                                     <a href=@Url.Action("Edit", "Projects", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                     }
                                 }
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a href=@Url.Action("Delete", "Projects", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
-                                }
                             </div>
                         }
                     </td>
@@ -106,10 +102,6 @@
                                     {
                                         <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                     }
-                                }
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a href=@Url.Action("Delete", "Tickets", new { id = item.Id }, null) class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></a>
                                 }
                             </div>
                         </td>

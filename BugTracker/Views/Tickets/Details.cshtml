@@ -1,11 +1,13 @@
 ﻿@model BugTracker.Models.Ticket
+@using Microsoft.AspNet.Identity
 @using BugTracker.Helpers
 @{
-                /**/
+    /**/
 
-                ViewBag.Title = "Details";
+    ViewBag.Title = "Details";
 }
-@{ 
+@{
+    string user = User.Identity.GetUserId();
     bool onhold = Model.TicketStatus.Name == "On Hold";
     var ticketarchived = Model.TicketStatus.Name == "Finished" || Model.TicketStatus.Name == "Removed";
 }
@@ -16,10 +18,10 @@
             <div style="display: flex">
                 @if (onhold && User.IsInRole("Admin") || onhold && User.IsInRole("Project Manager"))
                 {
-                <div>
-                    <h4>Ticket on hold<a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
-                    <p>The ticket is on hold meaning the no further action can be taken until the status has changed.</p>
-                </div>
+                    <div>
+                        <h4>Ticket on hold<a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a></h4>
+                        <p>The ticket is on hold meaning the no further action can be taken until the status has changed.</p>
+                    </div>
                 }
                 else if (onhold)
                 {
@@ -30,9 +32,9 @@
                 {
                     <h4>
                         Ticket
-                        @if(User.IsInRole("Admin") || User.IsInRole("Project Manager") || !ticketarchived)
+                        @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") || !ticketarchived)
                         {
-                        <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                            <a href=@Url.Action("Edit", "Tickets", new { id = Model.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                         }
                     </h4>
                     <h5 style="margin-left: auto">Priority: @Html.DisplayFor(model => model.TicketPriority.Name)</h5>
@@ -112,52 +114,72 @@
     </div>
     @if (!onhold)
     {
-    <div style="float: right; margin-top: 20px" class="col-md-3 ds">
+    <div style="margin-left: 20px; margin-top: 20px" class="col-md-3 ds">
         <h4 class="centered mt">Attachments</h4>
         <hr />
         @foreach (var attach in Model.TicketAttachments)
         {
-
             string icon = IconHelper.GetIcon(attach.FilePath);
             <a href="@(attach.FilePath)">
                 <div class="desc">
+
                     <div class="thumb">
+
                         <span class="badge bg-theme"><i class="@(icon)"></i></span>
                     </div>
+
                     <div style="word-wrap: break-word;" class="details">
                         @Html.Raw(attach.FilePath.Replace("/Uploads/", ""))
                     </div>
 
+                    <div>
+
+                        @{
+                            bool isusers = attach.UserId == user;
+                        }
+                        @if (!ticketarchived && (User.IsInRole("Admin") || isusers))
+                        {
+                            using (Html.BeginForm("Delete", "TicketAttachments", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("attachmentId", attach.Id)
+                                @Html.Hidden("origin", Model.Id)
+                                <button class="btn btn-primary btn-xs"><i class="fa fa-trash-o "></i></button>
+
+                            }
+                        }
+                    </div>
                 </div>
             </a>
+
         }
         @if (!ticketarchived)
         {
-        <div style="margin-bottom: 20px">
-            @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("TicketId", Model.Id)
-                <div class="form-group">
-                    @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
-                    @Html.TextArea("AttachDescription", new { @class = "comment" })
-                    <br />
-                    <br />
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <span class="btn btn-theme02 btn-file">
-                            <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select file</span>
-                            <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                            <br />
-                            <input name="image" type="file" id="fileUpload" />
-                        </span>
-                        <span style="word-wrap: break-word;" class="fileupload-preview"></span>
-                        <a href="advanced_form_components.html#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
+            <div style="margin-bottom: 20px">
+                @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("TicketId", Model.Id)
+                    <div class="form-group">
+                        @Html.Label("Description", htmlAttributes: new { @class = "control -label " })
+                        @Html.TextArea("AttachDescription", new { @class = "comment" })
+                        <br />
+                        <br />
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <span class="btn btn-theme02 btn-file">
+                                <span class="fileupload-new"><i class="fa fa-paperclip"></i> Select file</span>
+                                <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                <br />
+                                <input name="image" type="file" id="fileUpload" />
+                            </span>
+                            <span style="word-wrap: break-word;" class="fileupload-preview"></span>
+                            <a href="advanced_form_components.html#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </div>
-            }
-            
-        </div>
+                }
+
+            </div>
         }
         <h4 class="centered mt">
             Recent Activity
@@ -192,11 +214,11 @@
                 </div>
             }
         </div>
-        }
+
     </div>
     }
-    </div>
-  
+</div>
+
 <style>
     .comment {
         resize: none;

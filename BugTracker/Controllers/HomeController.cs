@@ -114,7 +114,7 @@ namespace BugTracker.Controllers
             {
                 var ticketcount = tickets.Where(B => {
                     var daysago = Int32.Parse(DateTimeOffset.Now.Subtract(B.Created).ToString("%d"));
-                    return (7*i <= daysago && daysago < (i + 2) * 7);
+                    return (7*i <= daysago && daysago < (i + 1) * 7);
 
                 });
                 output.Add(new ticketdata { ticketsubs = ticketcount.Count(), week =  DateTime.Now.AddDays(-7*i).ToString("yyyy-MM-dd") });

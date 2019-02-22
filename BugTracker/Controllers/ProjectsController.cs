@@ -126,9 +126,16 @@ namespace BugTracker.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[Authorize(Roles = "Admin, Project Manager")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Archive([Bind(Include = "Id,Name,Description, Archived")] Project project)
+        //{
+
+        //    db.Entry(project).Property(x => x.Archived).IsModified = true;
+        //    return RedirectToAction("Index", "Home");
+        //}
+
         [HttpPost]
         [Authorize(Roles = "Admin, Project Manager")]
         [ValidateAntiForgeryToken]

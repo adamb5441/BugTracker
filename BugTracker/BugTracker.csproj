@@ -314,7 +314,6 @@
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Shared\_ShowUsers.cshtml" />
     <Content Include="Views\Shared\_ShowProjects.cshtml" />
     <Content Include="Views\Shared\_ShowTickets.cshtml" />

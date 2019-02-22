@@ -7,7 +7,6 @@
 
 @{ 
     var userId = User.Identity.GetUserId();
-    ProjectHelper projectHelper = new ProjectHelper();
 }
 
 
@@ -15,8 +14,15 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal well" style="margin: 10px 20% 0px">
-    <h2>Edit Project</h2>
+<div class="well" style="margin: 10px 20% 0px">
+    <h2>
+        Edit Project
+
+        @if (User.IsInRole("Admin"))
+        {
+            <button id="deletebtn" style="float: right" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+        }
+    </h2>
     <p class="text-danger">
         @ViewBag.ticketWarning
     </p>
@@ -88,4 +94,30 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var projectId = @Model.Id;
+        $("#deletebtn").click( () => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                $.ajax({
+                    url: `/Projects/Delete/${projectId}`,
+                    type: 'POST',
+                    success: function (result) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                });
+            })
+        })
+    </script>
 }

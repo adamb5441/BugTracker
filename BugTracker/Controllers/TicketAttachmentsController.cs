@@ -68,9 +68,11 @@ namespace BugTracker.Controllers
                     image.SaveAs(Path.Combine(Server.MapPath("~/Uploads/"), filename));
                     ticketAttachment.FilePath = "/Uploads/" + filename;
                 }
-                
-                TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
-                await NotificationHelper.SendNotificationAsync("A attachment has been added to ticket","Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
+                if (ticket.AssignedToUserId != null)
+                {
+                    TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
+                    await NotificationHelper.SendNotificationAsync("A attachment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
+                }
 
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
@@ -100,12 +102,12 @@ namespace BugTracker.Controllers
         // POST: TicketAttachments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int attachmentId, int origin)
         {
-            TicketAttachment ticketAttachment = db.TicketAttachments.Find(id);
+            TicketAttachment ticketAttachment = db.TicketAttachments.Find(attachmentId);
             db.TicketAttachments.Remove(ticketAttachment);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Tickets", new { id = origin });
         }
 
         protected override void Dispose(bool disposing)
