@@ -20,7 +20,16 @@ else
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Created)
         <div class="form-horizontal well" style="margin: 10px 20% 0px">
-            <h2>Edit Ticket</h2>
+            <h2>
+                Edit Ticket
+
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <button id="deletebtn" style="float: right" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
+                }
+            </h2>
+
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
@@ -98,4 +107,60 @@ else
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
+    <script>
+        var TicketId = @Model.Id;
+        $("#deletebtn").click(() => {
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true,
+                preConfirm: (login) => {
+                    return fetch(`/Tickets/Delete/${TicketId}`, { method: 'post' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return window.location.replace("/")
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+
+            }).then((result) => {
+
+                if (result.value) {
+                    swalWithBootstrapButtons.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your imaginary file is safe :)',
+                        'error'
+                    )
+                }
+            })
+
+        })
+    </script>
 }

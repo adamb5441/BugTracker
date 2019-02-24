@@ -5,14 +5,9 @@
     ViewBag.Title = "Edit";
 }
 
-@{ 
+@{
     var userId = User.Identity.GetUserId();
 }
-
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
 
 <div class="well" style="margin: 10px 20% 0px">
     <h2>
@@ -23,101 +18,135 @@
             <button id="deletebtn" style="float: right" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
         }
     </h2>
-    <p class="text-danger">
-        @ViewBag.ticketWarning
-    </p>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
-    <div style="padding: 10px 50px 0px">
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
-            <div class="">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
-            <div class="">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("Archive ticket", null, htmlAttributes: new { @class = "control-label " })
-            <div class="">
-                @Html.CheckBoxFor(model => model.Archived, null)
-            </div>
-        </div>
-        @if (User.IsInRole("Admin"))
-        {
+        <p class="text-danger">
+            @ViewBag.ticketWarning
+        </p>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+        <div style="padding: 10px 50px 0px">
             <div class="form-group">
-                @Html.Label("Add yourself to the project", null, htmlAttributes: new { @class = "control-label " })
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
                 <div class="">
-                    @Html.DropDownList("Admin", null, "none", htmlAttributes: new { @class = "form-control" })
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                 </div>
             </div>
 
-            <div>
-
-            </div>
             <div class="form-group">
-                @Html.Label("Choose Project Manager", null, htmlAttributes: new { @class = "control-label " })
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
                 <div class="">
-                    @Html.DropDownList("ProjectManager", null, "none", htmlAttributes: new { @class = "form-control" })
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                 </div>
             </div>
-        }
-        <div class="form-group">
-            @Html.Label("Choose Submitter", null, htmlAttributes: new { @class = "control-label " })
-            <div class="">
-                @Html.DropDownList("Submitter", null, "none", htmlAttributes: new { @class = "form-control" })
+            <div class="form-group">
+                @Html.Label("Archive ticket", null, htmlAttributes: new { @class = "control-label " })
+                <div class="">
+                    @Html.CheckBoxFor(model => model.Archived, null)
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            @Html.Label("Choose Developers", null, htmlAttributes: new { @class = "control-label " })
-            <div class="">
-                @Html.ListBox("Developer", null, htmlAttributes: new { @class = "form-control" })
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="form-group">
+                    @Html.Label("Add yourself to the project", null, htmlAttributes: new { @class = "control-label " })
+                    <div class="">
+                        @Html.DropDownList("Admin", null, "none", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div>
+
+                </div>
+                <div class="form-group">
+                    @Html.Label("Choose Project Manager", null, htmlAttributes: new { @class = "control-label " })
+                    <div class="">
+                        @Html.DropDownList("ProjectManager", null, "none", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                @Html.Label("Choose Submitter", null, htmlAttributes: new { @class = "control-label " })
+                <div class="">
+                    @Html.DropDownList("Submitter", null, "none", htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Choose Developers", null, htmlAttributes: new { @class = "control-label " })
+                <div class="">
+                    @Html.ListBox("Developer", null, htmlAttributes: new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+    }
 </div>
-}
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
         var projectId = @Model.Id;
-        $("#deletebtn").click( () => {
-            Swal.fire({
+        $("#deletebtn").click(() => {
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true,
+                preConfirm: (login) => {
+                    return fetch(`/Projects/Delete/${projectId}`, { method: 'post' })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return window.location.replace("/")
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+
             }).then((result) => {
-                $.ajax({
-                    url: `/Projects/Delete/${projectId}`,
-                    type: 'POST',
-                    success: function (result) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your file has been deleted.',
-                            'success'
-                        )
-                    }
-                });
+
+                if (result.value) {
+                    swalWithBootstrapButtons.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        'Your imaginary file is safe :)',
+                        'error'
+                    )
+                }
             })
+
         })
     </script>
 }
