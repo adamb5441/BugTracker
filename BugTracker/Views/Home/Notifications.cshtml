@@ -2,12 +2,28 @@
 @{
     ViewBag.Title = "Notifications";
 }
-
-<h2>Notifications</h2>
-
-@foreach(var notification in Model)
-{
-    <p>
-        @Html.Raw(notification.NotifocationBody)
-    </p>
-}
+<div style="text-align: center; align-items: center; margin: 10px 20% 0px">
+    <h2>Notifications</h2>
+    @foreach (var notification in Model.OrderByDescending(b => b.Created))
+    {
+    <div class="well" >
+        <p>
+            @Html.Raw(notification.NotifocationBody)
+        </p>
+        <br />
+        <hr />
+        @{ 
+            var user = "";
+            if(notification.SenderUser.DisplayName == "")
+            {
+                user = "User";
+            }
+            else
+            {
+                user = notification.SenderUser.DisplayName;
+            }
+        }
+        <footer>Change by @Html.Raw(user) on @Html.Raw(notification.Created)</footer>
+    </div>
+    }
+</div>

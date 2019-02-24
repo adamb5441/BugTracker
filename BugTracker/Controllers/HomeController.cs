@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace BugTracker.Controllers
 {
@@ -124,6 +125,21 @@ namespace BugTracker.Controllers
 
             string json = JsonConvert.SerializeObject(output);
             return json;
+        }
+        [HttpPost]
+        [Authorize]
+        public HttpStatusCodeResult ConfirmViewed()
+        {
+            var userId = User.Identity.GetUserId();
+            var notifications = db.TicketNotifications.Where(n => n.RecipientUserId == userId);
+            foreach(TicketNotification notification in notifications)
+            {
+                notification.Comfirmed = true;
+                db.Entry(notification).Property(x => x.Comfirmed).IsModified = true;
+            }
+
+            db.SaveChanges();
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

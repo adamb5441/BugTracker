@@ -30,7 +30,6 @@ $.ajax({
     type: 'GET',
     success: function (result) {
         var chartData = JSON.parse(result);
-        console.log(chartData)
         new Morris.Donut({
             element: 'yourdonut',
             data: chartData,
@@ -45,7 +44,6 @@ $.ajax({
     type: 'GET',
     success: function (result) {
         var chartData = JSON.parse(result);
-        console.log(chartData)
         new Morris.Donut({
             element: 'donut',
             data: chartData,

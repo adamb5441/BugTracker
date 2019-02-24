@@ -24,6 +24,7 @@
     <link href="~/Content/style.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css" />
     <link href="~/Content/bootstrap-fileupload.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css" />
     <!-- =======================================================
       Template Name: Dashio
       Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
@@ -48,24 +49,27 @@
             <div class="nav notify-row" id="top_menu">
                 @{
                     TicketNotificationHelper Helper = new TicketNotificationHelper();
-                    var notifications = Helper.GetNotification();
+                    var notifications = Helper.GetNotification().Where(n => n.Comfirmed == false);
                     var num = notifications.Count();
                 }
                 <ul class="nav top-menu">
                     <li id="header_notification_bar" class="dropdown">
                         @if (User.IsInRole("Developer"))
                         {
-                            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                            <a id="notifications" data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                                 <i class="fa fa-bell-o"></i>
-                                <span class="badge bg-warning">@num</span>
+                                @if (num > 0)
+                                {
+                                    <span id="notenum" class="badge bg-warning">@num</span>
+                                }
                             </a>
                         }
-                        <ul class="dropdown-menu extended notification">
+                        <ul style="height: auto; " class="dropdown-menu extended notification">
                             <div class="notify-arrow notify-arrow-yellow"></div>
                             <li>
                                 <p class="yellow">You have @(num) new notifications</p>
                             </li>
-                            @foreach (var notification in notifications.OrderByDescending(B => B.Created).Take(5))
+                            @foreach (var notification in notifications.OrderByDescending(B => B.Created))
                             {
                                 <li style="overflow: hidden">
                                     <a href="@Url.Action("Details", "Tickets", new { id = notification.TicketId })">
@@ -222,8 +226,23 @@
     <script src="~/Scripts/auto.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
     <!--script for this page-->
     <script>
+
+        $("#notenum").show();
+        $("#notifications").click(() => {
+            console.log("this runs")
+            fetch(`/Home/ConfirmViewed`, { method: 'post' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText)
+                    }
+                    $("#notenum").toggle();
+                    return 0;
+                })
+
+        })
 
         $('.table').DataTable();
         $(".pastcomments").hide()

@@ -21,7 +21,8 @@ namespace BugTracker.Helpers
             var emailfrom = user.Email;
             ApplicationUser userto = db.Users.Find(devid);
             var emailto = userto.Email;
-            var body = $"{notification} {ticketnum} has changed please contact a supervisor for further questions.";
+            var ticketname = db.Tickets.Find(ticketnum).Title;
+            var body = $"{notification} {ticketname} has changed please contact a supervisor for further questions.";
 
             var email = new MailMessage(from, emailto)
             {
@@ -32,7 +33,7 @@ namespace BugTracker.Helpers
 
             var svc = new PersonalEmail();
             await svc.SendAsync(email);
-            var dropbody = notification + " " + ticketnum;
+            var dropbody = notification + " " + ticketname;
             var record = new TicketNotification
             {
                 TicketId = ticketnum,

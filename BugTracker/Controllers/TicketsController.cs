@@ -73,7 +73,7 @@ namespace BugTracker.Controllers
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName");
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "FirstName");
             var userId = User.Identity.GetUserId();
-            var projId = projectHelper.ListUserProjects(userId);
+            var projId = archivedHelper.GetMyActiveProjects(userId);
             ViewBag.ProjectId = new SelectList(projId, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
@@ -100,8 +100,9 @@ namespace BugTracker.Controllers
             }
             
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "FirstName", ticket.AssignedToUserId);
-                //new SelectList(db.Users, "Id", "FirstName", ticket.OwnerUserId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            var userId = User.Identity.GetUserId();
+            var projId = archivedHelper.GetMyActiveProjects(userId);
+            ViewBag.ProjectId = new SelectList(projId, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
@@ -140,7 +141,16 @@ namespace BugTracker.Controllers
             var devs = projectHelper.UsersOnProjectWithRole("Developer", ticket.ProjectId);
 
             ViewBag.AssignedToUserId = new SelectList(devs, "Id", "Email", ticket.AssignedToUserId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            if (User.IsInRole("Submitter"))
+            {
+                var projId = archivedHelper.GetMyActiveProjects(userId);
+                ViewBag.ProjectId = new SelectList(projId, "Id", "Name", ticket.ProjectId);
+            }
+            else
+            {
+                var projId = archivedHelper.GetActiveProjects();
+                ViewBag.ProjectId = new SelectList(projId, "Id", "Name", ticket.ProjectId);
+            }
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
@@ -198,7 +208,16 @@ namespace BugTracker.Controllers
             var devs = projUsers.Where(B => userRoleHelper.IsUserInRole(B.Id, "Developer"));
 
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", devs);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            if (User.IsInRole("Admin"))
+            {
+                var projId = archivedHelper.GetActiveProjects();
+                ViewBag.ProjectId = new SelectList(projId, "Id", "Name", ticket.ProjectId);
+            }
+            else
+            {
+                var projId = archivedHelper.GetMyActiveProjects(userId);
+                ViewBag.ProjectId = new SelectList(projId, "Id", "Name", ticket.ProjectId);
+            }
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
