@@ -123,15 +123,14 @@ namespace BugTracker.Controllers
             return View(ticketComment);
         }
 
-        // POST: TicketComments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int commid, int origin)
         {
-            TicketComment ticketComment = db.TicketComments.Find(id);
+            TicketComment ticketComment = db.TicketComments.Find(commid);
             db.TicketComments.Remove(ticketComment);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Tickets", new { id = origin });
         }
 
         protected override void Dispose(bool disposing)

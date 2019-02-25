@@ -85,6 +85,8 @@ namespace BugTracker.Controllers
             var output = new List<projectdata>();
             var projects = archivedHelper.GetMyActiveProjects(userId);
             var tickets = archivedHelper.GetYourActiveTickets(userId);
+            if (User.IsInRole("Developer")) { 
+}
             decimal total = tickets.Count();
             if (total == 0)
             {
@@ -94,7 +96,16 @@ namespace BugTracker.Controllers
             {
                 foreach (var project in projects)
                 {
-                        decimal percent = 100 * (project.Tickets.Count() / total);
+                    IEnumerable<Ticket> yourProj = project.Tickets;
+                    if (User.IsInRole("Developer"))
+                    {
+                        yourProj = yourProj.Where(b => b.AssignedToUserId == userId);
+                    }
+                    else
+                    {
+                        yourProj = yourProj.Where(b => b.OwnerUserId == userId);
+                    }
+                        decimal percent = 100 * (yourProj.Count() / total);
                         output.Add(new projectdata { label = project.Name, value = decimal.ToInt32(decimal.Round(percent)) });
                     
                 }
