@@ -2,6 +2,7 @@ namespace BugTracker.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
     using System.Linq;
 
@@ -10,8 +11,9 @@ namespace BugTracker.Models
         {
             public int Id { get; set; }
             public int ProjectId { get; set; }
-            
+            [MaxLength(40)]
             public string Title { get; set; }
+            [MaxLength(200)]
             public string Description { get; set; }
             public DateTime Created { get; set; }
             public DateTime? Updated { get; set; }
