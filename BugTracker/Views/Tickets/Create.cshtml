@@ -33,7 +33,7 @@
         <div class="form-group padding-lg ">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "" })
             <div class="">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Description, new { @class = "comment form-control" })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
