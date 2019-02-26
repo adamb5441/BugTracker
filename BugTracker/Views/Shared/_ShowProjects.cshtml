@@ -18,7 +18,7 @@
     <div id="demo" class="collapse in well">
         <table class="table">
 
-            <tr partialheader>
+            <tr style="background-color: white" partialheader>
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
@@ -33,7 +33,7 @@
             }
             @foreach (var item in Model)
             {
-                <tr class="partialheader" data-toggle="collapse" data-target=".collapse@(loop)">
+                <tr style="background-color: white" class="partialheader" data-toggle="collapse" data-target=".collapse@(loop)">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -80,7 +80,7 @@
 
                 foreach (var ticket in archiveHelper.ProjectsActiveTickets(item.Id))
                 {
-                    <tr style="background-color: #F5F5F5" class="collapse@(loop) collapse well">
+                    <tr style="background-color: #F5F5F5" class="collapse@(loop) collapse ">
                         <td>
                             @Html.DisplayFor(modelItem => ticket.Title)
                         </td>

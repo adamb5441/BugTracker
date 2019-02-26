@@ -72,8 +72,8 @@
                             @foreach (var notification in notifications.OrderByDescending(B => B.Created).Take(6))
                             {
                                 <li style="overflow: hidden">
-                                    <a >
-                                            <b>@notification.ShortBody @notification.TicketId</b>
+                                    <a>
+                                        <b>@notification.ShortBody @notification.TicketId</b>
                                         @*<span class="small italic">4 mins.</span>*@
                                     </a>
                                 </li>
@@ -226,6 +226,7 @@
     @*<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>*@
     <script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
     <!--script for this page-->
+    <script src="~/Scripts/inputfields.js"></script>
     <script>
 
         $("#notenum").show();
@@ -240,19 +241,6 @@
                     return 0;
                 })
 
-        })
-
-        $('.table').DataTable();
-        $(".pastcomments").hide()
-        $("#showcom").show()
-        $("#showcom").click(() => {
-            $(".pastcomments").toggle()
-            $("#showcom").hide();
-        })
-        $(".comment").autogrow();
-        $("#cancel").click(function (e) {
-            e.preventDefault();
-            $("#txtarea").val("")
         })
 
     </script>
