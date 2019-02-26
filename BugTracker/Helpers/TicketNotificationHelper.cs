@@ -12,7 +12,7 @@ namespace BugTracker.Helpers
     public class TicketNotificationHelper
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        public async System.Threading.Tasks.Task SendNotificationAsync(string notification,string update, int ticketnum, string devid)
+        public async System.Threading.Tasks.Task SendNotificationAsync( string shortbody,string notification,string update, int ticketnum, string devid)
         {
             
             var from = "BugTracker<Bug@Track.com>";
@@ -22,7 +22,7 @@ namespace BugTracker.Helpers
             ApplicationUser userto = db.Users.Find(devid);
             var emailto = userto.Email;
             var ticketname = db.Tickets.Find(ticketnum).Title;
-            var body = $"{notification} {ticketname} has changed please contact a supervisor for further questions.";
+            var body = $"{notification} {ticketname}. Please contact a supervisor for further questions.";
 
             var email = new MailMessage(from, emailto)
             {
@@ -36,6 +36,7 @@ namespace BugTracker.Helpers
             var dropbody = notification + " " + ticketname;
             var record = new TicketNotification
             {
+                ShortBody = shortbody,
                 TicketId = ticketnum,
                 SenderUserId = userId,
                 RecipientUserId = devid,

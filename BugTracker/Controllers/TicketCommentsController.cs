@@ -66,7 +66,7 @@ namespace BugTracker.Controllers
 
             var ticket = db.Tickets.Find(ticketComment.TicketId);
             TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
-            await NotificationHelper.SendNotificationAsync("A comment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
+            await NotificationHelper.SendNotificationAsync("Comment added ticket","A comment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketComment.UserId);

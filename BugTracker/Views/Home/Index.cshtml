@@ -76,7 +76,7 @@
     {
         <div>
             <h1>Welcome</h1>
-            <h3>Welcome Please Login</h3>
+            <h3>Please Login</h3>
         </div>
         <div class="col-md-3">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-login", role = "form" }))
@@ -102,11 +102,10 @@
                         </div>
                         <p>Role includes</p>
                         <ul class="pricing">
-                            <li>Delete content</li>
-                            <li>Assign users to roles, tickets and projects</li>
-                            <li>Updates content</li>
+                            <li>Assign users</li>
+                            <li>Update and delete</li>
                         </ul>
-                        <button class="margin-sm padding-sm btn btn-theme">Admin Login</button>
+                        <button style="width: 60%" class="margin-sm padding-sm btn btn-theme">Admin Login</button>
                     </div>
                 </div>
             }
@@ -135,11 +134,10 @@
                         </div>
                         <p>Role includes</p>
                         <ul class="pricing">
-                            <li>Assign users to tickets and project</li>
-                            <li>Update your project and tickets</li>
-                            <li>Update tickets in your project</li>
+                            <li>Assign users</li>
+                            <li>Update content</li>
                         </ul>
-                        <button class="margin-sm padding-sm btn btn-theme">Manager Login</button>
+                        <button style="width: 60%" class="margin-sm padding-sm btn btn-theme">Manager Login</button>
                     </div>
                 </div>
             }
@@ -168,11 +166,10 @@
                         </div>
                         <p>Role includes</p>
                         <ul class="pricing">
-                            <li>Update tickets assigned to you</li>
-                            <li>Change your own profile</li>
-                            <li>Get notified of changes made to your ticket</li>
+                            <li>Update tickets</li>
+                            <li>Ticket Notifications</li>
                         </ul>
-                        <button class="margin-sm padding-sm btn btn-theme">Developer Login</button>
+                        <button style="width: 60%" class="margin-sm padding-sm btn btn-theme">Developer Login</button>
                     </div>
                 </div>
             }
@@ -195,20 +192,15 @@
                             <div>
                                 <span class="icn-container">
                                     <i class="fa fa-ticket"></i>
-                                    @*<img style="height: 6vh" src="~/Images/admin.png" />*@
-
                                 </span>
                             </div>
                         </div>
                         <p>Role includes</p>
                         <ul class="pricing">
                             <li>Submit tickets</li>
-                            <li>update to your ticket</li>
-                            <li>
-                                <br /><br />
-                            </li>
+                            <li>update your ticket</li>
                         </ul>
-                        <button class="margin-sm padding-sm btn btn-theme">Submitter Login</button>
+                        <button style="width: 60%" class="margin-sm padding-sm btn btn-theme">Submitter Login</button>
                     </div>
                 </div>
             }

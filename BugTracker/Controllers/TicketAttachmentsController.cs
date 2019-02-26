@@ -71,7 +71,7 @@ namespace BugTracker.Controllers
                 if (ticket.AssignedToUserId != null)
                 {
                     TicketNotificationHelper NotificationHelper = new TicketNotificationHelper();
-                    await NotificationHelper.SendNotificationAsync("A attachment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
+                    await NotificationHelper.SendNotificationAsync("File added ticket","A attachment has been added to ticket", "Ticket Attachment", ticket.Id, ticket.AssignedToUserId);
                 }
 
                 db.TicketAttachments.Add(ticketAttachment);

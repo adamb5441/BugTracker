@@ -14,6 +14,8 @@ namespace BugTracker.Models
         public string RecipientUserId { get; set; }
 
         public string NotifocationBody { get; set; }
+        public string ShortBody { get; set; }
+
         public DateTime Created { get; set; }
         
         public bool Comfirmed { get; set; }

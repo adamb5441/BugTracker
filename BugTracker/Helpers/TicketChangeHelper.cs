@@ -30,16 +30,16 @@ namespace BugTracker.Helpers
                     {
                         devid = NewTicket.AssignedToUserId;
                         if(devid != null)
-                        await NotificationHelper.SendNotificationAsync("You have been assigned to ticket","Assignment", NewTicket.Id, devid);
+                        await NotificationHelper.SendNotificationAsync("Assigned to ticket","You have been assigned to ticket","Assignment", NewTicket.Id, devid);
                     }
                     else
                     {
                         devid = OldTicket.AssignedToUserId;
                         var devid2 = NewTicket.AssignedToUserId;
                         if (devid != null)
-                            await NotificationHelper.SendNotificationAsync("You hav been unassigned from ticket", "Assignment", NewTicket.Id, devid);
+                            await NotificationHelper.SendNotificationAsync("Unassigned from ticket", "You have been unassigned from ticket", "Assignment", NewTicket.Id, devid);
                         if (devid2 != null)
-                            await NotificationHelper.SendNotificationAsync("You hav been assigned to ticket", "Assignment", NewTicket.Id, devid2);
+                            await NotificationHelper.SendNotificationAsync("Assigned to ticket","You have been assigned to ticket", "Assignment", NewTicket.Id, devid2);
 
                     }
                     historyHelper.AddHistory(NewTicket.Id, "Assignment", OldTicket.AssignedToUserId, NewTicket.AssignedToUserId);
@@ -56,14 +56,14 @@ namespace BugTracker.Helpers
             if (OldTicket.TicketStatusId != NewTicket.TicketStatusId && currentUser.IsInRole("Admin") || currentUser.IsInRole("Project Manager"))
             {
                 if (devid != null)
-                    await NotificationHelper.SendNotificationAsync("The status has changed for ticket", "Status", NewTicket.Id, devid);
+                    await NotificationHelper.SendNotificationAsync("Priority change ticket", "The status has changed for ticket", "Status", NewTicket.Id, devid);
                 historyHelper.AddHistory(NewTicket.Id, "TicketStatus", OldTicket.TicketStatusId.ToString(), NewTicket.TicketStatusId.ToString());
 
             }
             if (OldTicket.TicketPriorityId != NewTicket.TicketPriorityId)
             {
                 if (devid != null)
-                    await NotificationHelper.SendNotificationAsync("The Priority has changed for ticket", "Priority", NewTicket.Id, devid);
+                    await NotificationHelper.SendNotificationAsync("Status change ticket","The Priority has changed for ticket", "Priority", NewTicket.Id, devid);
                 historyHelper.AddHistory(NewTicket.Id, "TicketPriority", OldTicket.TicketPriorityId.ToString(), NewTicket.TicketPriorityId.ToString());
             }
             if (OldTicket.TicketTypeId != NewTicket.TicketTypeId)
