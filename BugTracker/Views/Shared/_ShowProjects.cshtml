@@ -18,15 +18,15 @@
     <div id="demo" class="collapse in well">
         <table class="table">
 
-            <tr style="background-color: white" partialheader>
+            <tr style="background-color: white; width: 100%" partialheader>
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th style="text-align: center">
                     @Html.DisplayNameFor(model => model.Description)
                 </th>
-                <th></th>
-            </tr>
+                    <th></th>
+                </tr>
             @{
                 int loop = 0;
                 ProjectHelper projectHelper = new ProjectHelper();
@@ -37,7 +37,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td style="word-wrap: break-word">
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
 
@@ -73,19 +73,19 @@
                         Title
                     </td>
                     <td>
-                        Description
+                        Number
                     </td>
                     <td></td>
                 </tr>
 
                 foreach (var ticket in archiveHelper.ProjectsActiveTickets(item.Id))
                 {
-                    <tr style="background-color: #F5F5F5" class="collapse@(loop) collapse ">
+                    <tr style="background-color: #F5F5F5" class="collapse@(loop) collapse well">
                         <td>
                             @Html.DisplayFor(modelItem => ticket.Title)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => ticket.Description)
+                            @Html.DisplayFor(modelItem => ticket.Id)
                         </td>
 
                         <td>

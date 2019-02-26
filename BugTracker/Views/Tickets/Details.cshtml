@@ -44,7 +44,7 @@
             <div class="col-md-7">
                 <p>Subitted by @(Model.OwnerUser.UserName) on @(Model.Created) for project @(Model.Project.Name)</p>
                 <p>@Html.DisplayFor(model => model.Title)</p>
-                <p class="well">@Html.DisplayFor(model => model.Description)</p>
+                <p style="word-wrap:break-word" class="well">@Html.DisplayFor(model => model.Description)</p>
             </div>
             <div class="col-md-4 col-md-offset-1">
                 <p>Status: @Html.DisplayFor(model => model.TicketStatus.Name)</p>
@@ -124,7 +124,7 @@
 
                     <div style="margin: 10px" class="row">
                         <div class="col-md-12 panel panel-default">
-                            <p>@comment.CommentBody</p>
+                            <p style="word-wrap:break-word">@comment.CommentBody</p>
                         </div>
                     </div>
                 </div>

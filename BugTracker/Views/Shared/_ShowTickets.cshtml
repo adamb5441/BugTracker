@@ -22,7 +22,10 @@
         <thead>
             <tr>
                 <th style="text-align: center">
-                    @Html.DisplayNameFor(model => model.Project.Name)
+                    @Html.DisplayName("Number")
+                </th>
+                <th style="text-align: center">
+                    @Html.DisplayName("Project")
                 </th>
                 <th style="text-align: center">
                     @Html.DisplayName("Priority")
@@ -43,41 +46,44 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td style="text-align: center">
-                        @Html.DisplayFor(modelItem => item.Project.Name)
-                    </td>
-                    <td style="text-align: center">
-                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                    </td>
-                    <td style="text-align: center">
-                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                    </td>
-                    <td style="text-align: center">
-                        @Html.DisplayFor(modelItem => item.TicketType.Name)
-                    </td>
-                    <td style="text-align: center">
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @{
-                            var userId = User.Identity.GetUserId();
-                            var isuseronproject = projectHelper.IsUserOnProject(userId, item.ProjectId);
-                            var isuseronticket = userId == item.AssignedToUserId || userId == item.OwnerUserId;
-                            var ticketarchived = item.TicketStatus.Name == "Finished" || item.TicketStatus.Name == "Removed";
-                        }
-                        <div style="display: flex">
-                            @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject || isuseronticket)
+            <tr>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                </td>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                </td>
+                <td style="text-align: center">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @{
+                        var userId = User.Identity.GetUserId();
+                        var isuseronproject = projectHelper.IsUserOnProject(userId, item.ProjectId);
+                        var isuseronticket = userId == item.AssignedToUserId || userId == item.OwnerUserId;
+                        var ticketarchived = item.TicketStatus.Name == "Finished" || item.TicketStatus.Name == "Removed";
+                    }
+                    <div style="display: flex">
+                        @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject || isuseronticket)
+                        {
+                            <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
+                            if (!ticketarchived || User.IsInRole("Admin"))
                             {
-                                <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                                if (!ticketarchived || User.IsInRole("Admin"))
-                                {
                                 <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                }
                             }
-                        </div>
-                    </td>
-                </tr>
+                        }
+                    </div>
+                </td>
+            </tr>
             }
         </tbody>
     </table>
