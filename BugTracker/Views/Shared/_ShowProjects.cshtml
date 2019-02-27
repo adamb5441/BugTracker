@@ -15,7 +15,7 @@
 
 </div>
 
-    <div id="demo" class="collapse in well">
+    <div id="demo" class="collapse in well content-panel">
         <table class="table">
 
             <tr style="background-color: white; width: 100%" partialheader>
@@ -94,16 +94,7 @@
                                 var isuseronticket = userId == ticket.AssignedToUserId || userId == ticket.OwnerUserId;
                                 var ticketarchived = ticket.TicketStatus.Name == "Finished" || ticket.TicketStatus.Name == "Removed";
                             }
-                            <div style="display: flex">
-                                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") && isuseronproject || isuseronticket)
-                                {
-                                    <a href=@Url.Action("Details", "Tickets", new { id = item.Id }, null) class="btn btn-success btn-xs"><i class="fa fa-book"></i></a>
-                                    if (!ticketarchived)
-                                    {
-                                        <a href=@Url.Action("Edit", "Tickets", new { id = item.Id }, null) class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                    }
-                                }
-                            </div>
+
                         </td>
                     </tr>
                 }

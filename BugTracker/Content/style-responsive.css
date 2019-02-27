@@ -314,6 +314,9 @@
 
 
 @media (max-width: 480px) {
+    .hide-sm {
+        display: none;
+    }
 
     .notify-row, .search, .dont-show , .inbox-head .sr-input, .inbox-head .sr-btn{
         display: none;
@@ -419,6 +422,9 @@
 }
 
 @media (max-width:320px) {
+    .hide-sm{
+        display: none;
+    }
     .login-social-link a {
         padding: 15px 17px !important;
     }

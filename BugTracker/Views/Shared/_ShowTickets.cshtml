@@ -24,16 +24,16 @@
                 <th style="text-align: center">
                     @Html.DisplayName("Number")
                 </th>
-                <th style="text-align: center">
+                <th class="hide-sm" style="text-align: center">
                     @Html.DisplayName("Project")
                 </th>
-                <th style="text-align: center">
+                <th class="hide-sm" style="text-align: center">
                     @Html.DisplayName("Priority")
                 </th>
-                <th style="text-align: center">
+                <th class="hide-sm" style="text-align: center">
                     @Html.DisplayName("Status")
                 </th>
-                <th style="text-align: center">
+                <th class="hide-sm" style="text-align: center">
                     @Html.DisplayName("Type")
                 </th>
                 <th style="text-align: center">
@@ -50,13 +50,13 @@
                 <td style="text-align: center">
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
-                <td style="text-align: center">
+                <td class="hide-sm" style="text-align: center">
                     @Html.DisplayFor(modelItem => item.Project.Name)
                 </td>
-                <td style="text-align: center">
+                <td class="hide-sm" style="text-align: center">
                     @Html.DisplayFor(modelItem => item.TicketPriority.Name)
                 </td>
-                <td style="text-align: center">
+                <td class="hide-sm" style="text-align: center">
                     @Html.DisplayFor(modelItem => item.TicketStatus.Name)
                 </td>
                 <td style="text-align: center">
