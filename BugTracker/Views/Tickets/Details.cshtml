@@ -42,7 +42,7 @@
             </div>
             <hr />
             <div class="col-md-7">
-                <p>Subitted by @(Model.OwnerUser.UserName) on @(Model.Created) for project @(Model.Project.Name)</p>
+                <p>Subitted by @(Model.OwnerUser.DisplayName) on @(Model.Created) for project @(Model.Project.Name)</p>
                 <p style="word-wrap:break-word" class="well">@Html.DisplayFor(model => model.Description)</p>
             </div>
             <div class="col-md-4 col-md-offset-1">
@@ -191,7 +191,6 @@
                                 <input name="image" type="file" id="fileUpload" />
                             </span>
                             <span style="word-wrap: break-word;" class="fileupload-preview"></span>
-                            <a href="advanced_form_components.html#" class=" fileupload-exists btn btn-primary" data-dismiss="fileupload" style="float: none; margin-left:5px;"></a>
                         </div>
                         <button type="submit" class="btn btn-default">Submit</button>
                     </div>

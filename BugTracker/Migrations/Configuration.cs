@@ -1,9 +1,11 @@
 namespace BugTracker.Migrations
 {
+    using BugTracker.Helpers;
     using BugTracker.Models;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -14,6 +16,7 @@ namespace BugTracker.Migrations
         {
             AutomaticMigrationsEnabled = true;
         }
+        private ProjectHelper projectHelper = new ProjectHelper();
 
         protected override void Seed(BugTracker.Models.ApplicationDbContext context)
         {
@@ -23,6 +26,10 @@ namespace BugTracker.Migrations
             //  to avoid creating duplicate seed data.
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            if (!context.Roles.Any(r => r.Name == "Super Admin"))
+            {
+                roleManager.Create(new IdentityRole { Name = "Super Admin" });
+            }
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 roleManager.Create(new IdentityRole { Name = "Admin" });
@@ -50,12 +57,27 @@ namespace BugTracker.Migrations
                     Email = "adamb5441@gmail.com",
                     FirstName = "Adam",
                     LastName = "Brown",
-                    DisplayName = " TacoMan5441"
+                    DisplayName = "ABrown"
                 }, "Abc!123");
             }
 
-            var userId = userManager.FindByEmail("adamb5441@gmail.com").Id;
-            userManager.AddToRole(userId, "Admin");
+            var AdminuserId = userManager.FindByEmail("adamb5441@gmail.com").Id;
+            userManager.AddToRole(AdminuserId, "Admin");
+
+            if (!context.Users.Any(u => u.Email == "adam@mailinator.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "adam@mailinator.com",
+                    Email = "adam@mailinator.com",
+                    FirstName = "Adam",
+                    LastName = "Brown",
+                    DisplayName = "Super Admin"
+                }, "Abc!1234");
+            }
+
+            var SuperuserId = userManager.FindByEmail("adam@mailinator.com").Id;
+            userManager.AddToRole(SuperuserId, "Super Admin");
 
             if (!context.Users.Any(u => u.Email == "twichell@mailinator.com"))
             {
@@ -69,8 +91,8 @@ namespace BugTracker.Migrations
                 }, "Abc&123!");
             }
 
-            var devId = userManager.FindByEmail("twichell@mailinator.com").Id;
-            userManager.AddToRole(devId, "Developer");
+            var demodevId = userManager.FindByEmail("twichell@mailinator.com").Id;
+            userManager.AddToRole(demodevId, "Developer");
 
 
             if (!context.Users.Any(u => u.Email == "dev@mailinator.com"))
@@ -79,13 +101,13 @@ namespace BugTracker.Migrations
                 {
                     UserName = "dev@mailinator.com",
                     Email = "dev@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "Shmo",
-                    DisplayName = " joe123"
+                    FirstName = "Andrew",
+                    LastName = "Zimmerman",
+                    DisplayName = " AZimmerman"
                 }, "Abc!123");
             }
 
-            devId = userManager.FindByEmail("dev@mailinator.com").Id;
+            var devId = userManager.FindByEmail("dev@mailinator.com").Id;
             userManager.AddToRole(devId, "Developer");
 
             if (!context.Users.Any(u => u.Email == "dev2@mailinator.com"))
@@ -94,9 +116,9 @@ namespace BugTracker.Migrations
                 {
                     UserName = "dev2@mailinator.com",
                     Email = "dev2@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "Shmo",
-                    DisplayName = " joe2343"
+                    FirstName = "Nancy ",
+                    LastName = "Baumgartner",
+                    DisplayName = " NancyM"
                 }, "Abc!123");
             }
 
@@ -109,9 +131,9 @@ namespace BugTracker.Migrations
                 {
                     UserName = "dev3@mailinator.com",
                     Email = "dev3@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "Shmo",
-                    DisplayName = " joe26"
+                    FirstName = "Kate",
+                    LastName = "Tweedie",
+                    DisplayName = " Katy"
                 }, "Abc!123");
             }
 
@@ -124,14 +146,14 @@ namespace BugTracker.Migrations
                 {
                     UserName = "sub@mailinator.com",
                     Email = "sub@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "moe",
-                    DisplayName = "joemoe"
+                    FirstName = "Jordon",
+                    LastName = "Marron",
+                    DisplayName = "JordonM"
                 }, "Abc!123");
             }
 
-            var subId = userManager.FindByEmail("sub@mailinator.com").Id;
-            userManager.AddToRole(subId, "Submitter");
+            var demosubId = userManager.FindByEmail("sub@mailinator.com").Id;
+            userManager.AddToRole(demosubId, "Submitter");
 
             if (!context.Users.Any(u => u.Email == "sub2@mailinator.com"))
             {
@@ -139,13 +161,13 @@ namespace BugTracker.Migrations
                 {
                     UserName = "sub2@mailinator.com",
                     Email = "sub2@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "moe",
-                    DisplayName = "joemoe11"
+                    FirstName = "Shawn",
+                    LastName = "Singer",
+                    DisplayName = "Shawn"
                 }, "Abc!123");
             }
 
-            subId = userManager.FindByEmail("sub2@mailinator.com").Id;
+            var subId = userManager.FindByEmail("sub2@mailinator.com").Id;
             userManager.AddToRole(subId, "Submitter");
 
             if (!context.Users.Any(u => u.Email == "sub3@mailinator.com"))
@@ -154,9 +176,9 @@ namespace BugTracker.Migrations
                 {
                     UserName = "sub3@mailinator.com",
                     Email = "sub3@mailinator.com",
-                    FirstName = "joe",
-                    LastName = "moe",
-                    DisplayName = "joemoe99"
+                    FirstName = "Alfredo",
+                    LastName = "Acosta",
+                    DisplayName = "Alfredo"
                 }, "Abc!123");
             }
 
@@ -169,14 +191,14 @@ namespace BugTracker.Migrations
                 {
                     UserName = "manager@mailinator.com",
                     Email = "manager@mailinator.com",
-                    FirstName = "the",
-                    LastName = "man",
-                    DisplayName = "mana"
+                    FirstName = "Reed",
+                    LastName = "Laverty",
+                    DisplayName = "Reed"
                 }, "Abc!123");
             }
 
-            var manaId = userManager.FindByEmail("manager@mailinator.com").Id;
-            userManager.AddToRole(manaId, "Project Manager");
+            var demomanaId = userManager.FindByEmail("manager@mailinator.com").Id;
+            userManager.AddToRole(demomanaId, "Project Manager");
 
             if (!context.Users.Any(u => u.Email == "manager2@mailinator.com"))
             {
@@ -184,13 +206,13 @@ namespace BugTracker.Migrations
                 {
                     UserName = "manager2@mailinator.com",
                     Email = "manager2@mailinator.com",
-                    FirstName = "the",
-                    LastName = "man",
-                    DisplayName = "mana12"
+                    FirstName = "Barbara",
+                    LastName = "Marie",
+                    DisplayName = "Barbara"
                 }, "Abc!123");
             }
 
-            manaId = userManager.FindByEmail("manager2@mailinator.com").Id;
+            var manaId = userManager.FindByEmail("manager2@mailinator.com").Id;
             userManager.AddToRole(manaId, "Project Manager");
 
             if (!context.Users.Any(u => u.Email == "manager3@mailinator.com"))
@@ -199,9 +221,9 @@ namespace BugTracker.Migrations
                 {
                     UserName = "manager3@mailinator.com",
                     Email = "manager3@mailinator.com",
-                    FirstName = "the",
-                    LastName = "man",
-                    DisplayName = "mana44"
+                    FirstName = "Kevin",
+                    LastName = "Torres",
+                    DisplayName = "Kevin"
                 }, "Abc!123");
             }
 
@@ -218,7 +240,7 @@ namespace BugTracker.Migrations
             );
             context.TicketStatuses.AddOrUpdate(
             B => B.Name,
-                new TicketStatus { Name = "none" },
+                new TicketStatus {  Name = "none" },
                 new TicketStatus { Name = "New" },
                 new TicketStatus { Name = "In Progress" },
                 new TicketStatus { Name = "Finished" },
@@ -228,10 +250,14 @@ namespace BugTracker.Migrations
             context.TicketTypes.AddOrUpdate(
                 B => B.Name,
                 new TicketType { Name = "none" },
+                new TicketType { Name = "MVP" },
+                new TicketType { Name = "Redesign" },
+                new TicketType { Name = "Extra Feature" },
                 new TicketType { Name = "Bug" },
                 new TicketType { Name = "Documentation Requestion" },
                 new TicketType { Name = "Training Request" },
-                new TicketType { Name = "System Down" }
+                new TicketType { Name = "System Down" },
+                new TicketType { Name = "Update" }
 
             );
 

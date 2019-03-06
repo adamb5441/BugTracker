@@ -6,6 +6,10 @@
 }
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 <div style=" text-align: center">
+    @if(User.IsInRole("Super Admin"))
+    {
+        <a href=@Url.Action("Seed", "Super")>seed</a>
+    }
     @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
     {
         {
@@ -83,7 +87,7 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("Email", "adamb5441@gmail.com")
-                @Html.Hidden("Password", "Abc!1234")
+                @Html.Hidden("Password", "Abc!123")
                 @Html.Hidden("RememberMe", false)
                 <div>
                     <div class="custom-box">
