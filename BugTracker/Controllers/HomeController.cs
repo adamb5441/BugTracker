@@ -99,7 +99,7 @@ namespace BugTracker.Controllers
                     IEnumerable<Ticket> yourProj = project.Tickets;
                     if (User.IsInRole("Developer"))
                     {
-                        yourProj = yourProj.Where(b => b.AssignedToUserId == userId);
+                        yourProj = yourProj.Where(b => b.AssignedToUserId == userId && (b.TicketStatus.Id != 4 || b.TicketStatus.Id != 6));
                     }
                     else
                     {

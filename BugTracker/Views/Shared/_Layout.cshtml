@@ -230,7 +230,6 @@
 
         $("#notenum").show();
         $("#notifications").click(() => {
-            console.log("this runs")
             fetch(`/Home/ConfirmViewed`, { method: 'post' })
                 .then(response => {
                     if (!response.ok) {

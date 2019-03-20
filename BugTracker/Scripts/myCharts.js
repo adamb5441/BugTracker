@@ -24,21 +24,21 @@ if ($("#line-chart").length) {
         }
     });
 }
-if ($("#yourdonut").length) {
-    $.ajax({
-        url: "/Home/YourProjectData",
-        type: 'GET',
-        success: function (result) {
-            var chartData = JSON.parse(result);
-            new Morris.Donut({
-                element: 'yourdonut',
-                data: chartData,
-                colors: ['#3498db', '#2980b9', '#34495e'],
-                formatter: function (y) { return y + "%" }
-            });
-        }
-    });
-}
+//if ($("#yourdonut").length) {
+//    $.ajax({
+//        url: "/Home/YourProjectData",
+//        type: 'GET',
+//        success: function (result) {
+//            var chartData = JSON.parse(result);
+//            new Morris.Donut({
+//                element: 'yourdonut',
+//                data: chartData,
+//                colors: ['#3498db', '#2980b9', '#34495e'],
+//                formatter: function (y) { return y + "%" }
+//            });
+//        }
+//    });
+//}
 
 if ($("#donut").length) {
     $.ajax({

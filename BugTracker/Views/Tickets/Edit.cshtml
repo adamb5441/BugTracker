@@ -24,10 +24,10 @@ else
                 Edit Ticket
 
 
-                @if (User.IsInRole("Admin"))
+                @*@if (User.IsInRole("Admin"))
                 {
                     <button id="deletebtn" style="float: right" class="btn btn-danger"><i class="fa fa-trash-o "></i></button>
-                }
+                }*@
             </h2>
 
             <hr />
@@ -125,13 +125,13 @@ else
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel!',
                 reverseButtons: true,
+                timer: 6000000,
                 preConfirm: (login) => {
                     return fetch(`/Tickets/Delete/${TicketId}`, { method: 'post' })
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(response.statusText)
                             }
-                            return window.location.replace("/")
                         })
                         .catch(error => {
                             Swal.showValidationMessage(
@@ -155,7 +155,7 @@ else
                 ) {
                     swalWithBootstrapButtons.fire(
                         'Cancelled',
-                        'Your imaginary file is safe :)',
+                        'Your file is safe.',
                         'error'
                     )
                 }

@@ -5,7 +5,9 @@
 }
 
 <h1 style="text-align: center">Archived Projects</h1>
-
-@Html.Partial("_ShowProjects", Model.ToList())
-
+<div style="display: flex; justify-content: center">
+    <div style="width: 60vw">
+        @Html.Partial("_ShowProjects", Model.ToList())
+    </div>
+</div>
 
