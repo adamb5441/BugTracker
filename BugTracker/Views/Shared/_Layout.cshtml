@@ -138,7 +138,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    @if (Request.IsAuthenticated)
+                    @if (User.IsInRole("Admin") || User.IsInRole("Project Manager") || User.IsInRole("Submitter") || User.IsInRole("Developer"))
                     {
                         <li>
                             <a href=@Url.Action("Index", "Tickets")>
@@ -149,7 +149,7 @@
                         <li>
                             <a href=@Url.Action("Archive", "Tickets")>
                                 <i class="fa fa-ticket"></i>
-                                @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                @if (User.IsInRole("Admin") || User.IsInRole("Project Manager"))
                                 {
                                     <span>Archived Tickets</span>
                                 }

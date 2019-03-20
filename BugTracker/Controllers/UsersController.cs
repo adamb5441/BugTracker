@@ -92,7 +92,7 @@ namespace BugTracker.Controllers
             }
             var currentrole = rolesHelper.ListUserRoles(id).FirstOrDefault();
 
-            ViewBag.Roles = new SelectList(db.Roles, "Name", "Name", currentrole);
+            ViewBag.Roles = new SelectList(db.Roles.Where(r => r.Name != "Super Admin"), "Name", "Name", currentrole);
             return View(applicationUser);
         }
 
